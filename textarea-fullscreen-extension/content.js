@@ -10,6 +10,10 @@
     shortcutKey: 'f'
   };
 
+  // Inline SVG icons as fallback
+  const EXPAND_ICON = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNOCAzSDVhMiAyIDAgMCAwLTIgMnYzbTE4IDBWNWEyIDIgMCAwIDAtMi0yaC0zbTAgMThoM2EyIDIgMCAwIDAgMi0ydi0zTTMgMTZ2M2EyIDIgMCAwIDAgMiAyaDMiLz48L3N2Zz4=';
+  const COLLAPSE_ICON = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNOCAzdjNhMiAyIDAgMCAxLTIgMkgzbTE4IDBoLTNhMiAyIDAgMCAxLTItMlYzbTAgMTh2LTNhMiAyIDAgMCAxIDItMmgzTTMgMTZoM2EyIDIgMCAwIDEgMiAydjMiLz48L3N2Zz4=';
+
   // Load settings from storage
   chrome.storage.sync.get(settings, (items) => {
     settings = items;
@@ -53,62 +57,90 @@
   }
 
   function addFullscreenButton(textarea) {
-    // Use getComputedStyle for a more reliable size check
-    const style = window.getComputedStyle(textarea);
-    const height = parseFloat(style.height);
-    const width = parseFloat(style.width);
-
-    // Only add the button if the textarea is smaller than the defined limits
-    if (height >= 400 || width >= 800) {
-      return; // Skip large textareas
+    // Skip hidden textareas
+    if (textarea.offsetParent === null) {
+      return;
     }
 
     textarea.classList.add('tx-fullscreen-enabled');
 
-    // Create wrapper
-    const wrapper = document.createElement('div');
-    wrapper.className = 'tx-editor-wrapper';
+    // Create wrapper if textarea doesn't already have one
+    let wrapper = textarea.closest('.tx-editor-wrapper');
+    if (!wrapper) {
+      wrapper = document.createElement('div');
+      wrapper.className = 'tx-editor-wrapper';
+      
+      // Preserve textarea's display style
+      const computedStyle = window.getComputedStyle(textarea);
+      if (computedStyle.display === 'block') {
+        wrapper.style.display = 'block';
+      }
+      
+      textarea.parentNode.insertBefore(wrapper, textarea);
+    }
 
-    // Create editor container
-    const editor = document.createElement('div');
-    editor.className = 'tx-editor';
+    // Create editor container if it doesn't exist
+    let editor = wrapper.querySelector('.tx-editor');
+    if (!editor) {
+      editor = document.createElement('div');
+      editor.className = 'tx-editor';
+      wrapper.appendChild(editor);
+    }
 
-    // Create fullscreen icon
+    // Move textarea into editor if needed
+    if (textarea.parentNode !== editor) {
+      editor.appendChild(textarea);
+    }
+
+    // Check if button already exists
+    if (editor.querySelector('.tx-icon')) {
+      return;
+    }
+
+    // Create fullscreen icon button
     const icon = document.createElement('button');
     icon.className = 'tx-icon';
-    icon.style.backgroundImage = `url(${chrome.runtime.getURL('icons/expand.svg')})`;
     icon.setAttribute('type', 'button');
     icon.setAttribute('aria-label', 'Toggle Fullscreen');
     icon.title = 'Toggle Fullscreen (Ctrl+F)';
+    
+    // Try to load SVG from extension, fallback to inline SVG
+    const expandIconUrl = getIconUrl('icons/expand.svg', EXPAND_ICON);
+    icon.style.backgroundImage = `url("${expandIconUrl}")`;
 
-    // Insert wrapper before textarea
-    textarea.parentNode.insertBefore(wrapper, textarea);
-    wrapper.appendChild(editor);
-    editor.appendChild(icon);
-    editor.appendChild(textarea);
+    // Insert icon before textarea
+    editor.insertBefore(icon, textarea);
 
     // Click event for icon
     icon.addEventListener('click', (e) => {
       e.preventDefault();
-      toggleFullscreen(editor, textarea);
+      e.stopPropagation();
+      toggleFullscreen(editor, textarea, icon);
     });
 
     // Keyboard shortcut (Ctrl + configured key)
     textarea.addEventListener('keydown', (e) => {
       if (e.ctrlKey && e.key.toLowerCase() === settings.shortcutKey) {
         e.preventDefault();
-        toggleFullscreen(editor, textarea);
+        toggleFullscreen(editor, textarea, icon);
       }
     });
   }
 
-  function toggleFullscreen(editor, textarea) {
-    const icon = editor.querySelector('.tx-icon');
-    if (editor.classList.contains('expanded')) {
-      icon.style.backgroundImage = `url(${chrome.runtime.getURL('icons/expand.svg')})`;
+  function getIconUrl(path, fallback) {
+    try {
+      return chrome.runtime.getURL(path);
+    } catch (e) {
+      return fallback;
+    }
+  }
+
+  function toggleFullscreen(editor, textarea, icon) {
+    if (editor.classList.contains('tx-expanded')) {
+      icon.style.backgroundImage = `url("${getIconUrl('icons/expand.svg', EXPAND_ICON)}")`;
       minimizeEditor(editor);
     } else {
-      icon.style.backgroundImage = `url(${chrome.runtime.getURL('icons/collapse.svg')})`;
+      icon.style.backgroundImage = `url("${getIconUrl('icons/collapse.svg', COLLAPSE_ICON)}")`;
       expandEditor(editor, textarea);
     }
   }
@@ -119,7 +151,9 @@
       const overlay = document.createElement('div');
       overlay.className = 'tx-editor-overlay';
       overlay.addEventListener('click', () => {
+        const icon = editor.querySelector('.tx-icon');
         minimizeEditor(editor);
+        icon.style.backgroundImage = `url("${getIconUrl('icons/expand.svg', EXPAND_ICON)}")`;
       });
       document.body.appendChild(overlay);
 
@@ -129,18 +163,19 @@
       }, 10);
     }
 
+    // Store original styles
+    editor._originalStyles = {
+      width: editor.style.width,
+      height: editor.style.height,
+      position: editor.style.position,
+      top: editor.style.top,
+      left: editor.style.left,
+      transform: editor.style.transform,
+      zIndex: editor.style.zIndex
+    };
+
     // Expand editor
-    editor.classList.add('expanded');
-
-    if (settings.maxWidth) {
-      editor.style.maxWidth = settings.maxWidth;
-    }
-    if (settings.maxHeight) {
-      editor.style.maxHeight = settings.maxHeight;
-    }
-
-    // Position editor
-    positionEditor(editor);
+    editor.classList.add('tx-expanded');
 
     // Focus textarea
     textarea.focus();
@@ -148,21 +183,16 @@
     // Handle ESC key
     const handleEsc = (e) => {
       if (e.key === 'Escape') {
+        const icon = editor.querySelector('.tx-icon');
         minimizeEditor(editor);
+        icon.style.backgroundImage = `url("${getIconUrl('icons/expand.svg', EXPAND_ICON)}")`;
         document.removeEventListener('keydown', handleEsc);
       }
     };
     document.addEventListener('keydown', handleEsc);
 
-    // Handle window resize
-    const handleResize = () => {
-      positionEditor(editor);
-    };
-    window.addEventListener('resize', handleResize);
-
-    // Store event listeners for cleanup
+    // Store event listener for cleanup
     editor._escHandler = handleEsc;
-    editor._resizeHandler = handleResize;
   }
 
   function minimizeEditor(editor) {
@@ -176,34 +206,19 @@
     }
 
     // Minimize editor
-    editor.classList.remove('expanded');
-    editor.style.maxWidth = '';
-    editor.style.maxHeight = '';
-    editor.style.top = '';
-    editor.style.left = '';
+    editor.classList.remove('tx-expanded');
 
-    // Remove event listeners
+    // Restore original styles
+    if (editor._originalStyles) {
+      Object.assign(editor.style, editor._originalStyles);
+      delete editor._originalStyles;
+    }
+
+    // Remove event listener
     if (editor._escHandler) {
       document.removeEventListener('keydown', editor._escHandler);
       delete editor._escHandler;
     }
-    if (editor._resizeHandler) {
-      window.removeEventListener('resize', editor._resizeHandler);
-      delete editor._resizeHandler;
-    }
-  }
-
-  function positionEditor(editor) {
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
-    const editorWidth = editor.offsetWidth;
-    const editorHeight = editor.offsetHeight;
-
-    const top = (windowHeight - editorHeight) / 2;
-    const left = (windowWidth - editorWidth) / 2;
-
-    editor.style.top = Math.max(0, top) + 'px';
-    editor.style.left = Math.max(0, left) + 'px';
   }
 
 })();
