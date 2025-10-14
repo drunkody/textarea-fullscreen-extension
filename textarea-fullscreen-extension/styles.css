@@ -1,0 +1,87 @@
+.tx-editor-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.tx-editor {
+  position: relative;
+  width: 100%;
+  min-height: 70px;
+}
+
+.tx-editor.expanded {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 80% !important;
+  height: 80% !important;
+  max-width: 80% !important;
+  max-height: 80% !important;
+  z-index: 999999 !important;
+  background: white;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  padding: 10px;
+}
+
+.tx-editor.expanded textarea {
+  width: 100% !important;
+  height: calc(100% - 10px) !important;
+  resize: none !important;
+  border: 1px solid #ddd !important;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.tx-editor button.tx-icon {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  width: 24px;
+  height: 24px;
+  min-width: 0;
+  background-color: #fff;
+  background-size: 20px 20px;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+  font-size: 0; /* Hide any inherited text */
+  line-height: 1;
+  color: transparent;
+  text-shadow: none;
+}
+
+.tx-icon:hover {
+  background-color: #f0f0f0;
+  border-color: #999;
+}
+
+.tx-editor.expanded .tx-icon {
+  right: 15px;
+  top: 15px;
+}
+
+.tx-editor-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999998;
+  opacity: 0;
+  transition: opacity 0.3s;
+  backdrop-filter: blur(2px);
+}
