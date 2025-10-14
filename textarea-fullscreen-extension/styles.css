@@ -64,6 +64,14 @@
   height: 100vh !important;
   background: rgba(0, 0, 0, 0.7) !important;
   z-index: 2147483646 !important;
-  isolation: isolate !important; /* Creates new stacking context */
-  contain: strict !important; /* Maximum isolation */
+  isolation: isolate !important;
+  contain: strict !important;
+  transition: opacity 0.3s ease !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* Ensure fading out overlay doesn't block clicks */
+.tx-editor-overlay[style*="opacity: 0"] {
+  pointer-events: none !important;
 }
