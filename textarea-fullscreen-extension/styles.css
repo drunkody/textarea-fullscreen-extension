@@ -1,4 +1,4 @@
-/* These are fallback styles - main styles are inline for better compatibility */
+/* Fallback styles */
 
 .tx-editor-wrapper {
   position: relative !important;
@@ -37,9 +37,9 @@
 .tx-editor .tx-icon:hover {
   opacity: 1 !important;
   transform: scale(1.05) !important;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.25) !important;
 }
 
+/* Fullscreen mode - CRITICAL FIXES */
 .tx-editor.tx-expanded {
   position: fixed !important;
   top: 50% !important;
@@ -50,4 +50,20 @@
   max-width: 1400px !important;
   max-height: 900px !important;
   z-index: 2147483647 !important;
+  isolation: isolate !important; /* Creates new stacking context */
+  contain: layout style paint !important; /* Performance + isolation */
+}
+
+.tx-editor-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.7) !important;
+  z-index: 2147483646 !important;
+  isolation: isolate !important; /* Creates new stacking context */
+  contain: strict !important; /* Maximum isolation */
 }
