@@ -1,61 +1,45 @@
-/* Wrapper - block level by default */
+/* These are fallback styles - main styles are inline for better compatibility */
+
 .tx-editor-wrapper {
   position: relative !important;
   display: block !important;
   width: 100% !important;
 }
 
-/* Editor container */
 .tx-editor {
   position: relative !important;
   width: 100% !important;
-  min-height: 50px !important;
+  display: block !important;
 }
 
-/* Fullscreen button icon */
 .tx-editor .tx-icon {
   position: absolute !important;
   right: 5px !important;
   top: 5px !important;
-  width: 28px !important;
-  height: 28px !important;
-  min-width: 28px !important;
-  min-height: 28px !important;
-  max-width: 28px !important;
-  max-height: 28px !important;
+  width: 30px !important;
+  height: 30px !important;
   background-color: rgba(255, 255, 255, 0.95) !important;
   background-size: 18px 18px !important;
-  background-position: center center !important;
+  background-position: center !important;
   background-repeat: no-repeat !important;
-  border: 1px solid #ccc !important;
+  border: 1px solid rgba(204, 204, 204, 0.8) !important;
   border-radius: 4px !important;
   cursor: pointer !important;
-  z-index: 1000 !important;
-  transition: all 0.2s ease !important;
+  z-index: 999999 !important;
   padding: 0 !important;
   margin: 0 !important;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important;
-  font-size: 0 !important;
-  line-height: 1 !important;
-  color: transparent !important;
-  text-shadow: none !important;
-  opacity: 0.7 !important;
-  outline: none !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+  opacity: 0.85 !important;
+  transition: all 0.2s ease !important;
+  display: block !important;
 }
 
 .tx-editor .tx-icon:hover {
   opacity: 1 !important;
-  background-color: #fff !important;
-  border-color: #999 !important;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
   transform: scale(1.05) !important;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.25) !important;
 }
 
-.tx-editor .tx-icon:active {
-  transform: scale(0.95) !important;
-}
-
-/* Expanded editor (fullscreen mode) */
 .tx-editor.tx-expanded {
   position: fixed !important;
   top: 50% !important;
@@ -65,60 +49,5 @@
   height: 90vh !important;
   max-width: 1400px !important;
   max-height: 900px !important;
-  z-index: 2147483647 !important; /* Maximum z-index */
-  background: #fff !important;
-  border: 2px solid #999 !important;
-  border-radius: 8px !important;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4) !important;
-  padding: 15px !important;
-  box-sizing: border-box !important;
-}
-
-.tx-editor.tx-expanded textarea {
-  width: 100% !important;
-  height: 100% !important;
-  resize: none !important;
-  border: 1px solid #ddd !important;
-  border-radius: 4px !important;
-  padding: 15px !important;
-  font-size: 15px !important;
-  line-height: 1.6 !important;
-  box-sizing: border-box !important;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, monospace !important;
-  outline: none !important;
-}
-
-.tx-editor.tx-expanded .tx-icon {
-  right: 20px !important;
-  top: 20px !important;
-  width: 32px !important;
-  height: 32px !important;
-  min-width: 32px !important;
-  min-height: 32px !important;
-  max-width: 32px !important;
-  max-height: 32px !important;
-  background-size: 20px 20px !important;
-  opacity: 0.8 !important;
   z-index: 2147483647 !important;
-}
-
-.tx-editor.tx-expanded .tx-icon:hover {
-  opacity: 1 !important;
-}
-
-/* Overlay */
-.tx-editor-overlay {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  background: rgba(0, 0, 0, 0.6) !important;
-  z-index: 2147483646 !important; /* Just below editor */
-  opacity: 0 !important;
-  transition: opacity 0.3s ease !important;
-  backdrop-filter: blur(3px) !important;
-  cursor: pointer !important;
 }
