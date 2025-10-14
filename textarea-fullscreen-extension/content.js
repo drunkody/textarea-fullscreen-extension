@@ -1,5 +1,24 @@
 (function() {
   'use strict';
+    // Emergency cleanup function
+  function cleanupAllOverlays() {
+    const overlays = document.querySelectorAll('.tx-editor-overlay');
+    console.log(`[Textarea Fullscreen] Cleaning up ${overlays.length} overlays`);
+    
+    overlays.forEach(overlay => {
+      try {
+        if (overlay.parentNode) {
+          overlay.parentNode.removeChild(overlay);
+        }
+      } catch (e) {
+        console.error('[Textarea Fullscreen] Error removing overlay:', e);
+      }
+    });
+  }
+
+  // Add global cleanup on window events
+  window.addEventListener('beforeunload', cleanupAllOverlays);
+  window.addEventListener('pagehide', cleanupAllOverlays);
 
   // Performance monitoring
   let processCount = 0;
@@ -372,50 +391,68 @@
     }
   }
 
-  function expandEditor(editor, textarea, button) {
-    // Pause observer while in fullscreen mode
-    if (observer) {
-      observer.disconnect();
-    }
+function expandEditor(editor, textarea, button) {
+  // Pause observer while in fullscreen mode
+  if (observer) {
+    observer.disconnect();
+  }
 
-    // Create overlay - append directly to body
-    let overlay = null;
-    if (settings.overlay) {
-      overlay = document.createElement('div');
-      overlay.className = 'tx-editor-overlay';
-      overlay.style.cssText = `
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        bottom: 0 !important;
-        width: 100vw !important;
-        height: 100vh !important;
-        background: rgba(0, 0, 0, 0.7) !important;
-        z-index: 2147483646 !important;
-        opacity: 0 !important;
-        transition: opacity 0.3s ease !important;
-        backdrop-filter: blur(3px) !important;
-        cursor: pointer !important;
-        isolation: isolate !important;
-      `;
-      
-      overlay.addEventListener('click', () => {
-        button.style.backgroundImage = `url("${getIconUrl('icons/expand.svg')}")`;
-        minimizeEditor(editor, button);
-      });
-      
-      // Append to body, not to editor
-      document.body.appendChild(overlay);
+  // CRITICAL: Remove any existing overlays first
+  document.querySelectorAll('.tx-editor-overlay').forEach(old => {
+    if (old.parentNode) {
+      old.parentNode.removeChild(old);
+    }
+  });
+
+  // Create overlay - append directly to body
+  let overlay = null;
+  if (settings.overlay) {
+    overlay = document.createElement('div');
+    overlay.className = 'tx-editor-overlay';
+    overlay.setAttribute('data-tx-overlay', 'true'); // For easier cleanup
+    overlay.style.cssText = `
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      background: rgba(0, 0, 0, 0.7) !important;
+      z-index: 2147483646 !important;
+      opacity: 0 !important;
+      transition: opacity 0.3s ease !important;
+      backdrop-filter: blur(3px) !important;
+      cursor: pointer !important;
+      isolation: isolate !important;
+      pointer-events: auto !important;
+    `;
+    
+    const handleOverlayClick = () => {
+      button.style.backgroundImage = `url("${getIconUrl('icons/expand.svg')}")`;
+      minimizeEditor(editor, button);
+    };
+    
+    overlay.addEventListener('click', handleOverlayClick);
+    editor._overlayClickHandler = handleOverlayClick;
+    
+    // Append to body, not to editor
+    document.body.appendChild(overlay);
+    
+    // Fade in
+    requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        overlay.style.opacity = '1';
+        if (overlay) {
+          overlay.style.opacity = '1';
+        }
       });
-    }
+    });
+  }
 
-    // Store original parent and position
-    editor._originalParent = editor.parentNode;
-    editor._originalNextSibling = editor.nextSibling;
-    editor._overlay = overlay;
+  // Store original parent and position
+  editor._originalParent = editor.parentNode;
+  editor._originalNextSibling = editor.nextSibling;
+  editor._overlay = overlay;
 
     // Store original textarea styles
     editor._originalTextareaStyles = {
@@ -528,93 +565,104 @@
   }
 
   function minimizeEditor(editor, button) {
-    // Remove overlay
-    if (editor._overlay) {
-      editor._overlay.style.opacity = '0';
-      setTimeout(() => {
-        if (editor._overlay && editor._overlay.parentNode) {
-          editor._overlay.remove();
-        }
-      }, 300);
-      editor._overlay = null;
-    }
-
-    const textarea = editor.querySelector('textarea');
-
-    // Restore textarea styles
-    if (editor._originalTextareaStyles) {
-      Object.assign(textarea.style, editor._originalTextareaStyles);
-      delete editor._originalTextareaStyles;
-    } else {
-      // Fallback: reset to empty
-      textarea.style.cssText = '';
-    }
-
-    // Remove expanded class
-    editor.classList.remove('tx-expanded');
-
-    // Reset editor to minimal inline styles
-    editor.style.cssText = `
-      position: relative !important;
-      width: 100% !important;
-      display: block !important;
-    `;
-
-    // CRITICAL: Move editor back to original position
-    if (editor._originalParent) {
-      if (editor._originalNextSibling) {
-        editor._originalParent.insertBefore(editor, editor._originalNextSibling);
-      } else {
-        editor._originalParent.appendChild(editor);
+  // Remove ALL overlays (in case multiple were created)
+  const overlays = document.querySelectorAll('.tx-editor-overlay');
+  overlays.forEach(overlay => {
+    overlay.style.opacity = '0';
+    overlay.style.pointerEvents = 'none'; // CRITICAL: Disable clicking immediately
+    
+    // Remove after fade animation
+    setTimeout(() => {
+      if (overlay.parentNode) {
+        overlay.parentNode.removeChild(overlay);
       }
-      delete editor._originalParent;
-      delete editor._originalNextSibling;
-    }
+    }, 350); // Slightly longer than transition
+  });
 
-    // Reset button
-    const expandIconUrl = getIconUrl('icons/expand.svg');
-    button.style.cssText = `
-      position: absolute !important;
-      right: 5px !important;
-      top: 5px !important;
-      width: 30px !important;
-      height: 30px !important;
-      min-width: 30px !important;
-      min-height: 30px !important;
-      background-color: rgba(255, 255, 255, 0.95) !important;
-      background-image: url("${expandIconUrl}") !important;
-      background-size: 18px 18px !important;
-      background-position: center !important;
-      background-repeat: no-repeat !important;
-      border: 1px solid rgba(204, 204, 204, 0.8) !important;
-      border-radius: 4px !important;
-      cursor: pointer !important;
-      z-index: 999999 !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
-      opacity: 0.85 !important;
-      transition: all 0.2s ease !important;
-      outline: none !important;
-      font-size: 0 !important;
-      display: block !important;
-    `;
-
-    // Remove ESC handler
-    if (editor._escHandler) {
-      document.removeEventListener('keydown', editor._escHandler);
-      delete editor._escHandler;
+  // Also remove the stored reference
+  if (editor._overlay) {
+    if (editor._overlay.parentNode) {
+      editor._overlay.parentNode.removeChild(editor._overlay);
     }
-
-    // Resume observer
-    if (!isKilled) {
-      setTimeout(() => {
-        if (observer) {
-          setupObserver();
-        }
-      }, 500);
-    }
+    editor._overlay = null;
   }
+
+  const textarea = editor.querySelector('textarea');
+
+  // Restore textarea styles
+  if (editor._originalTextareaStyles) {
+    Object.assign(textarea.style, editor._originalTextareaStyles);
+    delete editor._originalTextareaStyles;
+  } else {
+    // Fallback: reset to empty
+    textarea.style.cssText = '';
+  }
+
+  // Remove expanded class
+  editor.classList.remove('tx-expanded');
+
+  // Reset editor to minimal inline styles
+  editor.style.cssText = `
+    position: relative !important;
+    width: 100% !important;
+    display: block !important;
+  `;
+
+  // CRITICAL: Move editor back to original position
+  if (editor._originalParent) {
+    if (editor._originalNextSibling) {
+      editor._originalParent.insertBefore(editor, editor._originalNextSibling);
+    } else {
+      editor._originalParent.appendChild(editor);
+    }
+    delete editor._originalParent;
+    delete editor._originalNextSibling;
+  }
+
+  // Reset button
+  const expandIconUrl = getIconUrl('icons/expand.svg');
+  button.style.cssText = `
+    position: absolute !important;
+    right: 5px !important;
+    top: 5px !important;
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    min-height: 30px !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    background-image: url("${expandIconUrl}") !important;
+    background-size: 18px 18px !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    border: 1px solid rgba(204, 204, 204, 0.8) !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    z-index: 999999 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+    opacity: 0.85 !important;
+    transition: all 0.2s ease !important;
+    outline: none !important;
+    font-size: 0 !important;
+    display: block !important;
+  `;
+
+  // Remove ESC handler
+  if (editor._escHandler) {
+    document.removeEventListener('keydown', editor._escHandler);
+    delete editor._escHandler;
+  }
+
+  // Resume observer
+  if (!isKilled) {
+    setTimeout(() => {
+      if (observer) {
+        setupObserver();
+      }
+    }, 500);
+  }
+}
 
   // Cleanup on page unload
   window.addEventListener('beforeunload', () => {
