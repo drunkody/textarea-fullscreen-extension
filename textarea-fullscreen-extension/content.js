@@ -1,77 +1,171 @@
 (function() {
   'use strict';
 
+  // Performance monitoring
+  let processCount = 0;
+  let lastProcessTime = Date.now();
+  let isKilled = false;
+
   // Default settings
   let settings = {
     enabled: true,
     overlay: true,
     maxWidth: '80%',
     maxHeight: '80%',
-    shortcutKey: 'f'
+    shortcutKey: 'f',
+    excludedDomains: [] // Add domains to exclude
   };
 
   let observer = null;
   let isProcessing = false;
   let processTimeout = null;
 
+  // Check if we should run on this domain
+  function shouldRunOnCurrentDomain() {
+    const hostname = window.location.hostname;
+    const excludePatterns = [
+      ...settings.excludedDomains,
+      // Add problematic domains by default
+      'mail.google.com',
+      'docs.google.com',
+      'sheets.google.com'
+    ];
+    
+    return !excludePatterns.some(pattern => {
+      if (pattern.includes('*')) {
+        const regex = new RegExp(pattern.replace(/\*/g, '.*'));
+        return regex.test(hostname);
+      }
+      return hostname.includes(pattern);
+    });
+  }
+
   // Load settings from storage
   if (typeof chrome !== 'undefined' && chrome.storage) {
     chrome.storage.sync.get(settings, (items) => {
       settings = items;
-      if (settings.enabled) {
+      if (settings.enabled && shouldRunOnCurrentDomain()) {
+        init();
+      } else {
+        console.log('[Textarea Fullscreen] Disabled on this domain');
+      }
+    });
+  } else if (typeof browser !== 'undefined' && browser.storage) {
+    browser.storage.sync.get(settings).then((items) => {
+      settings = items;
+      if (settings.enabled && shouldRunOnCurrentDomain()) {
         init();
       }
     });
   } else {
-    // Firefox fallback
-    init();
+    if (shouldRunOnCurrentDomain()) {
+      init();
+    }
   }
 
   function init() {
+    // Kill switch - stop if processing too frequently
+    const checkPerformance = () => {
+      const now = Date.now();
+      const timeSinceLastProcess = now - lastProcessTime;
+      
+      if (processCount > 100 && timeSinceLastProcess < 5000) {
+        console.error('[Textarea Fullscreen] Performance issue detected - disabling extension on this page');
+        killExtension();
+        return false;
+      }
+      
+      // Reset counter every 5 seconds
+      if (timeSinceLastProcess > 5000) {
+        processCount = 0;
+        lastProcessTime = now;
+      }
+      
+      return true;
+    };
+
     // Initial processing with delay
     setTimeout(() => {
-      processTextareas();
-    }, 500);
+      if (checkPerformance()) {
+        processTextareas();
+      }
+    }, 1000);
 
-    // Setup mutation observer with throttling
+    // Setup mutation observer with aggressive throttling
     setupObserver();
   }
 
+  function killExtension() {
+    isKilled = true;
+    if (observer) {
+      observer.disconnect();
+      observer = null;
+    }
+    if (processTimeout) {
+      clearTimeout(processTimeout);
+      processTimeout = null;
+    }
+    console.log('[Textarea Fullscreen] Extension stopped on this page to prevent performance issues');
+  }
+
   function setupObserver() {
-    // Throttled processing function
+    if (isKilled) return;
+
+    // Very aggressive throttling - only process every 2 seconds max
     const throttledProcess = () => {
+      if (isKilled) return;
+      
       if (processTimeout) {
         clearTimeout(processTimeout);
       }
+      
       processTimeout = setTimeout(() => {
-        if (!isProcessing) {
+        if (!isProcessing && !isKilled) {
+          processCount++;
           processTextareas();
         }
-      }, 300); // 300ms throttle
+      }, 2000); // 2 second throttle
     };
 
     observer = new MutationObserver((mutations) => {
-      // Check if any mutations added textarea elements
+      if (isKilled) {
+        observer.disconnect();
+        return;
+      }
+
+      // Limit the number of mutations we check
+      const maxMutationsToCheck = 10;
       let hasNewTextarea = false;
       
-      for (const mutation of mutations) {
+      for (let i = 0; i < Math.min(mutations.length, maxMutationsToCheck); i++) {
+        const mutation = mutations[i];
+        
         // Skip our own modifications
         if (mutation.target.classList && 
             (mutation.target.classList.contains('tx-editor-wrapper') ||
              mutation.target.classList.contains('tx-editor') ||
+             mutation.target.classList.contains('tx-editor-overlay') ||
              mutation.target.classList.contains('tx-icon'))) {
           continue;
         }
 
-        for (const node of mutation.addedNodes) {
-          if (node.nodeType === 1) { // Element node
-            if (node.tagName === 'TEXTAREA' || 
-                (node.querySelectorAll && node.querySelectorAll('textarea').length > 0)) {
-              hasNewTextarea = true;
-              break;
+        // Only check added nodes
+        if (mutation.addedNodes.length > 0) {
+          for (const node of mutation.addedNodes) {
+            if (node.nodeType === 1) { // Element node
+              if (node.tagName === 'TEXTAREA') {
+                hasNewTextarea = true;
+                break;
+              }
+              // Only check one level deep to avoid performance hit
+              if (node.querySelector && node.querySelector('textarea')) {
+                hasNewTextarea = true;
+                break;
+              }
             }
           }
         }
+        
         if (hasNewTextarea) break;
       }
 
@@ -80,28 +174,43 @@
       }
     });
 
+    // Observe with minimal options
     observer.observe(document.body, {
       childList: true,
-      subtree: true
+      subtree: true,
+      attributes: false, // Don't watch attribute changes
+      characterData: false // Don't watch text changes
     });
   }
 
   function processTextareas() {
-    if (isProcessing) return;
+    if (isProcessing || isKilled) return;
+    
     isProcessing = true;
 
     try {
+      // Temporarily disconnect observer
+      if (observer) {
+        observer.disconnect();
+      }
+
       const textareas = document.querySelectorAll('textarea:not(.tx-fullscreen-enabled)');
       
-      // Limit processing to prevent memory issues
-      const maxProcess = 50;
+      // Strict limit - only process 10 textareas at a time
+      const maxProcess = 10;
       let processed = 0;
 
       textareas.forEach(textarea => {
-        if (processed >= maxProcess) return;
+        if (processed >= maxProcess || isKilled) return;
         
-        // Skip hidden textareas
         try {
+          // Skip if already wrapped
+          if (textarea.closest('.tx-editor-wrapper')) {
+            textarea.classList.add('tx-fullscreen-enabled');
+            return;
+          }
+
+          // Quick visibility check
           const rect = textarea.getBoundingClientRect();
           if (rect.width > 0 && rect.height > 0) {
             addFullscreenButton(textarea);
@@ -119,29 +228,25 @@
       console.error('[Textarea Fullscreen] Error in processTextareas:', e);
     } finally {
       isProcessing = false;
+      
+      // Reconnect observer after a delay
+      if (!isKilled) {
+        setTimeout(() => {
+          if (!isKilled && observer) {
+            setupObserver();
+          }
+        }, 500);
+      }
     }
   }
 
   function addFullscreenButton(textarea) {
-    // Double-check not already processed
-    if (textarea.classList.contains('tx-fullscreen-enabled')) {
-      return;
-    }
-
+    if (isKilled) return;
+    
     // Mark immediately to prevent reprocessing
     textarea.classList.add('tx-fullscreen-enabled');
 
-    // Check if already wrapped
-    if (textarea.closest('.tx-editor-wrapper')) {
-      return;
-    }
-
     try {
-      // Temporarily disconnect observer to prevent infinite loop
-      if (observer) {
-        observer.disconnect();
-      }
-
       const computedStyle = window.getComputedStyle(textarea);
       const originalDisplay = computedStyle.display;
 
@@ -202,67 +307,44 @@
       `;
 
       // Insert wrapper
-      textarea.parentNode.insertBefore(wrapper, textarea);
+      const parent = textarea.parentNode;
+      if (!parent) return;
+      
+      parent.insertBefore(wrapper, textarea);
       wrapper.appendChild(editor);
       editor.appendChild(button);
       editor.appendChild(textarea);
 
-      // Hover effects
-      const handleMouseEnter = () => {
+      // Hover effects (use passive listeners for performance)
+      button.addEventListener('mouseenter', () => {
         button.style.opacity = '1';
         button.style.transform = 'scale(1.05)';
         button.style.boxShadow = '0 3px 12px rgba(0,0,0,0.25)';
-      };
+      }, { passive: true });
 
-      const handleMouseLeave = () => {
+      button.addEventListener('mouseleave', () => {
         button.style.opacity = '0.85';
         button.style.transform = 'scale(1)';
         button.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
-      };
-
-      button.addEventListener('mouseenter', handleMouseEnter);
-      button.addEventListener('mouseleave', handleMouseLeave);
+      }, { passive: true });
 
       // Click event
-      const handleClick = (e) => {
+      button.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         toggleFullscreen(editor, textarea, button);
-      };
-      button.addEventListener('click', handleClick);
+      });
 
       // Keyboard shortcut
-      const handleKeydown = (e) => {
+      textarea.addEventListener('keydown', (e) => {
         if (e.ctrlKey && e.key.toLowerCase() === settings.shortcutKey) {
           e.preventDefault();
           toggleFullscreen(editor, textarea, button);
         }
-      };
-      textarea.addEventListener('keydown', handleKeydown);
-
-      // Store cleanup function
-      editor._cleanup = () => {
-        button.removeEventListener('mouseenter', handleMouseEnter);
-        button.removeEventListener('mouseleave', handleMouseLeave);
-        button.removeEventListener('click', handleClick);
-        textarea.removeEventListener('keydown', handleKeydown);
-      };
-
-      // Reconnect observer after a delay
-      setTimeout(() => {
-        if (observer) {
-          setupObserver();
-        }
-      }, 100);
+      });
 
     } catch (e) {
       console.error('[Textarea Fullscreen] Error adding button:', e);
-      // Reconnect observer even on error
-      setTimeout(() => {
-        if (observer) {
-          setupObserver();
-        }
-      }, 100);
     }
   }
 
@@ -271,7 +353,6 @@
       if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.getURL) {
         return chrome.runtime.getURL(path);
       }
-      // Firefox/browser extension API fallback
       if (typeof browser !== 'undefined' && browser.runtime && browser.runtime.getURL) {
         return browser.runtime.getURL(path);
       }
@@ -292,9 +373,15 @@
   }
 
   function expandEditor(editor, textarea, button) {
-    // Create overlay
+    // Pause observer while in fullscreen mode
+    if (observer) {
+      observer.disconnect();
+    }
+
+    // Create overlay - append directly to body
+    let overlay = null;
     if (settings.overlay) {
-      const overlay = document.createElement('div');
+      overlay = document.createElement('div');
       overlay.className = 'tx-editor-overlay';
       overlay.style.cssText = `
         position: fixed !important;
@@ -310,23 +397,25 @@
         transition: opacity 0.3s ease !important;
         backdrop-filter: blur(3px) !important;
         cursor: pointer !important;
+        isolation: isolate !important;
       `;
       
-      const handleOverlayClick = () => {
+      overlay.addEventListener('click', () => {
         button.style.backgroundImage = `url("${getIconUrl('icons/expand.svg')}")`;
         minimizeEditor(editor, button);
-      };
+      });
       
-      overlay.addEventListener('click', handleOverlayClick);
-      editor._overlayClickHandler = handleOverlayClick;
-      
+      // Append to body, not to editor
       document.body.appendChild(overlay);
-
-      // Fade in
       requestAnimationFrame(() => {
         overlay.style.opacity = '1';
       });
     }
+
+    // Store original parent and position
+    editor._originalParent = editor.parentNode;
+    editor._originalNextSibling = editor.nextSibling;
+    editor._overlay = overlay;
 
     // Store original textarea styles
     editor._originalTextareaStyles = {
@@ -335,13 +424,24 @@
       minHeight: textarea.style.minHeight,
       maxHeight: textarea.style.maxHeight,
       resize: textarea.style.resize,
-      position: textarea.style.position,
       background: textarea.style.background,
-      color: textarea.style.color
+      color: textarea.style.color,
+      position: textarea.style.position,
+      border: textarea.style.border,
+      borderRadius: textarea.style.borderRadius,
+      padding: textarea.style.padding,
+      fontSize: textarea.style.fontSize,
+      lineHeight: textarea.style.lineHeight,
+      fontFamily: textarea.style.fontFamily
     };
 
-    // Expand editor
+    // CRITICAL: Move editor directly to body to escape stacking context
+    document.body.appendChild(editor);
+
+    // Add expanded class
     editor.classList.add('tx-expanded');
+    
+    // Apply fullscreen styles
     editor.style.cssText = `
       position: fixed !important;
       top: 50% !important;
@@ -360,6 +460,8 @@
       box-sizing: border-box !important;
       display: flex !important;
       flex-direction: column !important;
+      isolation: isolate !important;
+      margin: 0 !important;
     `;
 
     // Style textarea for fullscreen
@@ -379,10 +481,11 @@
       color: #e0e0e0 !important;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, monospace !important;
       outline: none !important;
-      flex: 1 !important;
+      flex: 1 1 auto !important;
+      position: relative !important;
     `;
 
-    // Update button position for fullscreen
+    // Update button for fullscreen
     button.style.cssText = `
       position: absolute !important;
       right: 20px !important;
@@ -404,10 +507,10 @@
       margin: 0 !important;
       box-shadow: 0 3px 12px rgba(0,0,0,0.3) !important;
       opacity: 0.9 !important;
+      display: block !important;
       transition: all 0.2s ease !important;
       outline: none !important;
       font-size: 0 !important;
-      display: block !important;
     `;
 
     // Focus textarea
@@ -426,19 +529,16 @@
 
   function minimizeEditor(editor, button) {
     // Remove overlay
-    const overlay = document.querySelector('.tx-editor-overlay');
-    if (overlay) {
-      overlay.style.opacity = '0';
+    if (editor._overlay) {
+      editor._overlay.style.opacity = '0';
       setTimeout(() => {
-        if (editor._overlayClickHandler) {
-          overlay.removeEventListener('click', editor._overlayClickHandler);
-          delete editor._overlayClickHandler;
+        if (editor._overlay && editor._overlay.parentNode) {
+          editor._overlay.remove();
         }
-        overlay.remove();
       }, 300);
+      editor._overlay = null;
     }
 
-    // Get textarea
     const textarea = editor.querySelector('textarea');
 
     // Restore textarea styles
@@ -446,18 +546,33 @@
       Object.assign(textarea.style, editor._originalTextareaStyles);
       delete editor._originalTextareaStyles;
     } else {
+      // Fallback: reset to empty
       textarea.style.cssText = '';
     }
 
-    // Reset editor
+    // Remove expanded class
     editor.classList.remove('tx-expanded');
+
+    // Reset editor to minimal inline styles
     editor.style.cssText = `
       position: relative !important;
       width: 100% !important;
       display: block !important;
     `;
 
+    // CRITICAL: Move editor back to original position
+    if (editor._originalParent) {
+      if (editor._originalNextSibling) {
+        editor._originalParent.insertBefore(editor, editor._originalNextSibling);
+      } else {
+        editor._originalParent.appendChild(editor);
+      }
+      delete editor._originalParent;
+      delete editor._originalNextSibling;
+    }
+
     // Reset button
+    const expandIconUrl = getIconUrl('icons/expand.svg');
     button.style.cssText = `
       position: absolute !important;
       right: 5px !important;
@@ -467,7 +582,7 @@
       min-width: 30px !important;
       min-height: 30px !important;
       background-color: rgba(255, 255, 255, 0.95) !important;
-      background-image: url("${getIconUrl('icons/expand.svg')}") !important;
+      background-image: url("${expandIconUrl}") !important;
       background-size: 18px 18px !important;
       background-position: center !important;
       background-repeat: no-repeat !important;
@@ -490,24 +605,36 @@
       document.removeEventListener('keydown', editor._escHandler);
       delete editor._escHandler;
     }
+
+    // Resume observer
+    if (!isKilled) {
+      setTimeout(() => {
+        if (observer) {
+          setupObserver();
+        }
+      }, 500);
+    }
   }
 
   // Cleanup on page unload
   window.addEventListener('beforeunload', () => {
-    if (observer) {
-      observer.disconnect();
-      observer = null;
-    }
+    killExtension();
     
     // Cleanup all editors
     document.querySelectorAll('.tx-editor').forEach(editor => {
-      if (editor._cleanup) {
-        editor._cleanup();
-      }
       if (editor._escHandler) {
         document.removeEventListener('keydown', editor._escHandler);
+        delete editor._escHandler;
+      }
+      if (editor._overlay && editor._overlay.parentNode) {
+        editor._overlay.remove();
       }
     });
+  });
+
+  // Cleanup on extension disable/reload
+  window.addEventListener('pagehide', () => {
+    killExtension();
   });
 
 })();
