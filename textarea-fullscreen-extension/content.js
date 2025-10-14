@@ -636,5 +636,40 @@
   window.addEventListener('pagehide', () => {
     killExtension();
   });
-
+  // Listen for settings updates from popup
+  if (typeof chrome !== 'undefined' && chrome.runtime) {
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message.type === 'SETTINGS_UPDATED') {
+        console.log('[Textarea Fullscreen] Settings updated:', message.settings);
+        settings = message.settings;
+        
+        // If extension was just enabled, initialize
+        if (settings.enabled && !observer) {
+          init();
+        }
+        // If disabled, kill it
+        else if (!settings.enabled) {
+          killExtension();
+        }
+        
+        sendResponse({ success: true });
+      }
+    });
+  } else if (typeof browser !== 'undefined' && browser.runtime) {
+    browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message.type === 'SETTINGS_UPDATED') {
+        console.log('[Textarea Fullscreen] Settings updated:', message.settings);
+        settings = message.settings;
+        
+        if (settings.enabled && !observer) {
+          init();
+        } else if (!settings.enabled) {
+          killExtension();
+        }
+        
+        return Promise.resolve({ success: true });
+      }
+    });
+  }
+  
 })();
