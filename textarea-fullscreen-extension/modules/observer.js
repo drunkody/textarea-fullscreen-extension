@@ -101,6 +101,10 @@ const ObserverManager = (function() {
       clearTimeout(processTimeout);
       processTimeout = null;
     }
+    if (scrollTimeout) {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = null;
+    }
   }
 
   /**
