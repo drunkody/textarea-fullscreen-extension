@@ -17,7 +17,16 @@
     {
       "matches": ["<all_urls>"],
       "css": ["styles.css"],
-      "js": ["content.js"],
+      "js": [
+        "modules/settings.js",
+        "modules/cleanup.js",
+        "modules/performance.js",
+        "modules/ui-builder.js",
+        "modules/fullscreen.js",
+        "modules/textarea-detector.js",
+        "modules/observer.js",
+        "content.js"
+      ],
       "run_at": "document_idle"
     }
   ],
