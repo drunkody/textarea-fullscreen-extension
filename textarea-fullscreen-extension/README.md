@@ -13,7 +13,7 @@
 3. **Usage**:
    - Visit any webpage with textareas
    - Click the fullscreen icon in the top-right corner of any textarea
-   - Or press Ctrl+F (or your configured key) while focused on the textarea
+   - Or press Alt+F (or your configured key) while focused on the textarea
    - Press ESC or click the overlay to exit fullscreen
 
 ## Features:
