@@ -44,8 +44,10 @@ document.getElementById('save').addEventListener('click', () => {
               chrome.tabs.sendMessage(tab.id, {
                 type: 'SETTINGS_UPDATED',
                 settings: settings
-              }).catch(() => {
-                // Ignore errors for tabs without content script
+              }, function(response) {
+                if (chrome.runtime.lastError) {
+                  // Ignore errors for tabs without content script
+                }
               });
             } else if (typeof browser !== 'undefined' && browser.tabs.sendMessage) {
               browser.tabs.sendMessage(tab.id, {
