@@ -1,0 +1,77 @@
+/* Fallback styles */
+
+.tx-editor-wrapper {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+}
+
+.tx-editor {
+  position: relative !important;
+  width: 100% !important;
+  display: block !important;
+}
+
+.tx-editor .tx-icon {
+  position: absolute !important;
+  right: 5px !important;
+  top: 5px !important;
+  width: 30px !important;
+  height: 30px !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  background-size: 18px 18px !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  border: 1px solid rgba(204, 204, 204, 0.8) !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  z-index: 999999 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+  opacity: 0.85 !important;
+  transition: all 0.2s ease !important;
+  display: block !important;
+}
+
+.tx-editor .tx-icon:hover {
+  opacity: 1 !important;
+  transform: scale(1.05) !important;
+}
+
+/* Fullscreen mode - CRITICAL FIXES */
+.tx-editor.tx-expanded {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 90vw !important;
+  height: 90vh !important;
+  max-width: 1400px !important;
+  max-height: 900px !important;
+  z-index: 2147483647 !important;
+  isolation: isolate !important; /* Creates new stacking context */
+  contain: layout style paint !important; /* Performance + isolation */
+}
+
+.tx-editor-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.7) !important;
+  z-index: 2147483646 !important;
+  isolation: isolate !important;
+  contain: strict !important;
+  transition: opacity 0.3s ease !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* Ensure fading out overlay doesn't block clicks */
+.tx-editor-overlay[style*="opacity: 0"] {
+  pointer-events: none !important;
+}

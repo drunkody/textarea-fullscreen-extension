@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      width: 300px;
+      padding: 15px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      font-size: 14px;
+    }
+    h3 {
+      margin: 0 0 15px 0;
+      font-size: 16px;
+      color: #333;
+    }
+    .option {
+      margin-bottom: 12px;
+    }
+    label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      margin-bottom: 5px;
+    }
+    input[type="checkbox"] {
+      margin-right: 8px;
+      cursor: pointer;
+    }
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 13px;
+      box-sizing: border-box;
+    }
+    .small-text {
+      font-size: 12px;
+      color: #666;
+      margin-top: 3px;
+    }
+    button {
+      width: 100%;
+      padding: 8px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    button:active {
+      background: #3d8b40;
+    }
+    .status {
+      margin-top: 10px;
+      padding: 8px;
+      background: #e8f5e9;
+      border-radius: 4px;
+      text-align: center;
+      display: none;
+      color: #2e7d32;
+      font-size: 12px;
+    }
+    .info-box {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 4px;
+      padding: 8px;
+      margin-top: 10px;
+      font-size: 11px;
+      color: #856404;
+    }
+    .info-box strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h3>⛶ Textarea Fullscreen</h3>
+
+  <div class="option">
+    <label>
+      <input type="checkbox" id="enabled" checked>
+      <span>Enable extension</span>
+    </label>
+  </div>
+
+  <div class="option">
+    <label>
+      <input type="checkbox" id="overlay" checked>
+      <span>Show overlay</span>
+    </label>
+  </div>
+
+  <div class="option">
+    <label for="maxWidth">Max Width</label>
+    <input type="text" id="maxWidth" value="80%" placeholder="e.g., 80%, 1000px">
+    <div class="small-text">Width in fullscreen mode</div>
+  </div>
+
+  <div class="option">
+    <label for="maxHeight">Max Height</label>
+    <input type="text" id="maxHeight" value="80%" placeholder="e.g., 80%, 800px">
+    <div class="small-text">Height in fullscreen mode</div>
+  </div>
+
+  <div class="option">
+    <label for="shortcutKey">Keyboard Shortcut</label>
+    <input type="text" id="shortcutKey" value="f" maxlength="1" placeholder="f">
+    <div class="small-text">Press Ctrl + key to toggle fullscreen</div>
+  </div>
+
+  <button id="save">Save Settings</button>
+  <div class="status" id="status">Settings saved!</div>
+
+  <div class="info-box">
+    <strong>ℹ️ Note:</strong>
+    After saving, refresh any page to apply changes to existing textareas. New textareas will use the new settings automatically.
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
