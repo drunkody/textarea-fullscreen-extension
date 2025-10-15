@@ -53,9 +53,10 @@ const CleanupManager = (function() {
   /**
    * Initialize cleanup listeners
    */
-  function init() {
-    window.addEventListener('beforeunload', cleanupAll);
-    window.addEventListener('pagehide', cleanupAll);
+  function init(shutdownCallback) {
+    const cleanup = shutdownCallback || cleanupAll;
+    window.addEventListener('beforeunload', cleanup);
+    window.addEventListener('pagehide', cleanup);
   }
 
   return {

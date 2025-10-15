@@ -26,7 +26,7 @@
     }
 
     // Initialize cleanup handlers (beforeunload, pagehide)
-    Cleanup.init();
+    Cleanup.init(shutdown);
 
     // Initial textarea processing with delay
     setTimeout(() => {
@@ -62,12 +62,6 @@
     Observer.removeScrollListener();
     Cleanup.cleanupAll();
   }
-
-  /**
-   * Cleanup on page unload
-   */
-  window.addEventListener('beforeunload', shutdown);
-  window.addEventListener('pagehide', shutdown);
 
   // Start the extension
   init();
