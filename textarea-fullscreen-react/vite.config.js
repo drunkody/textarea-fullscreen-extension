@@ -8,12 +8,5 @@ export default defineConfig({
     react(),
     crx({ manifest })
   ],
-  build: {
-    rollupOptions: {
-      input: {
-        popup: 'popup.html',
-        content: 'src/content/index.jsx'
-      }
-    }
-  }
+  // Remove the custom build.rollupOptions - CRXJS handles this automatically
 })
