@@ -1,0 +1,8 @@
+.tx-editor-wrapper {
+    position: relative !important;
+    display: block !important;
+}
+
+.tx-editor-wrapper > textarea {
+    position: relative !important;
+}

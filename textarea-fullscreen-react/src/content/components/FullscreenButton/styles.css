@@ -1,0 +1,44 @@
+.tx-icon {
+    position: absolute !important;
+    right: 5px !important;
+    top: 5px !important;
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    min-height: 30px !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    background-size: 18px 18px !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    border: 1px solid rgba(204, 204, 204, 0.8) !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    z-index: 999999 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+    opacity: 0.85 !important;
+    transition: all 0.2s ease !important;
+    outline: none !important;
+}
+
+.tx-icon:hover {
+    opacity: 1 !important;
+    transform: scale(1.05) !important;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.25) !important;
+}
+
+.tx-icon.expanded {
+    right: 20px !important;
+    top: 20px !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    background-size: 20px 20px !important;
+    border: 1px solid #666 !important;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.3) !important;
+    opacity: 0.9 !important;
+    z-index: 2147483647 !important;
+}
