@@ -1,4 +1,4 @@
-# Slide 0a: What are Chrome Extensions?
+# Slide 00: What are Chrome Extensions?
 
 ---
 

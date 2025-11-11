@@ -143,4 +143,4 @@ graph LR
 
 ---
 
-**Next:** [Slide 1: Init WXT React Starter](./0a-intro-chrome-extensions.md)
+**Next:** [Slide 00: What are Chrome Extensions](./00-intro-chrome-extensions.md)
