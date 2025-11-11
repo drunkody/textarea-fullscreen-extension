@@ -1,130 +1,147 @@
-# About me
+# Обо мне
 
 ---
 
-## 👋 Hi, I'm Alex Chen
+## 👋 Привет, я самозанятый разработчик
 
-**Senior Frontend Developer & Extension Enthusiast**
+**Начинающий разработчик расширений и энтузиаст веб-технологий**
 
 ```mermaid
-graph LR
-    A[🎓 Education] --> D[💼 Career]
-    B[💻 Skills] --> D
-    C[🌟 Interests] --> D
-    D --> E[📚 Teaching]
+graph TB
+    CENTER[👨‍💻 Я]
     
-    style D fill:#54bc4a
-    style E fill:#61dafb
+    CENTER --> A[💻 Веб-разработка]
+    CENTER --> B[📱 Мобильная разработка]
+    CENTER --> C[🎨 UI инновации]
+    CENTER --> D[🐧 Linux системы]
+    CENTER --> E[🏃 Активный образ жизни]
+    
+    A --> A1[JavaScript<br/>Node.js]
+    B --> B1[Android]
+    C --> C1[Generative UI<br/>SDUI<br/>Design]
+    D --> D1[NixOS]
+    E --> E1[Бег<br/>Велосипед<br/>ЗОЖ]
+    
+    style CENTER fill:#54bc4a
+    style A fill:#61dafb
+    style B fill:#a78bfa
+    style C fill:#ffa500
+    style D fill:#06b6d4
+    style E fill:#ff6b6b
 ```
 
 ---
 
-## 🚀 Background
+## 🚀 Обо мне
 
-### Professional Experience
+### Образование и опыт
 
-**Current:** Senior Frontend Developer @ TechFlow Inc.  
-**Focus:** Browser extensions, React applications, Developer tools
+**Образование:** Среднее полное.  
+**Фокус:** JavaScript, Node.js, расширения для браузеров, боты
 
-**Previous Roles:**
-- 🏢 **WebTools Corp** - Full-stack Developer (3 years)
-- 🎨 **DesignLab** - Frontend Engineer (2 years)
-- 💡 **Startup Studios** - Freelance Developer (1 year)
+**Опыт:**
+- 💻 Самообучение программированию
+- 🚴 Организатор велосипедного сообщества в Челябинске
+- 🚴 Организатор творческого сообщества в Челябинске
+- 🤖 Разработка систем коммуникации для сообществ(боты, соц.сети, приложения)
 
 ---
 
-### Technical Expertise
+### Технические навыки
 
 ```typescript
 const skills = {
-  languages: ['TypeScript', 'JavaScript', 'Python', 'Go'],
-  frameworks: ['React', 'Vue', 'Next.js', 'Node.js'],
-  extensions: ['WXT', 'Plasmo', 'Chrome APIs', 'WebExtensions'],
-  tools: ['Vite', 'Webpack', 'Git', 'Docker'],
-  interests: ['DX', 'Performance', 'Open Source']
+  languages: ['JavaScript', 'TypeScript', 'Node.js'],
+  frameworks: ['React', 'WXT'],
+  interests: ['Расширения браузера', 'Боты', 'SMM', 'Веб-приложения'],
+  tools: ['Git', 'Vite', 'Chrome APIs'],
+  soft_skills: ['Ответственность', 'Активность', 'Коммуникабельность', 
+                'Стрессоустойчивость', 'Быстрое обучение']
 };
 ```
 
 ---
 
-## 🎯 Why Chrome Extensions?
+## 🎯 Почему расширения Chrome?
 
 <details>
-<summary><b>My Extension Journey</b></summary>
+<summary><b>Мой путь в разработке</b></summary>
 
-**2018** - Built my first extension (a simple tab manager)  
-**2020** - Published 3 extensions with 50K+ users  
-**2022** - Started contributing to WXT framework  
-**2024** - Teaching extension development workshops
+**Начало** - Увлечение ИТ технологиями и программированием  
+**Развитие** - Изучение JavaScript и Node.js  
+**Практика** - Создание ботов и систем коммуникации для велосообщества  
+**Сейчас** - Освоение разработки расширений для браузеров с React и WXT
 
-**Published Extensions:**
-- 📝 **QuickNotes** - 25K users, 4.5⭐ rating
-- 🎨 **ColorPicker Pro** - 15K users, 4.7⭐ rating  
-- ⌨️ **DevTools Shortcuts** - 10K users, 4.6⭐ rating
+**Реализованные проекты:**
+- 🚴 **Велосообщество Челябинск** - [vk.com/bike_everyday_chelyabinsk](https://vk.com/bike_everyday_chelyabinsk)
+- 💬 **Подслушано у велосипедистов** - [vk.com/bike_overhear_chelyabinsk](https://vk.com/bike_overhear_chelyabinsk)
+- 🚵 **Велотуры выходного дня** - [vk.com/bike_tour_chelyabinsk](https://vk.com/bike_tour_chelyabinsk)
+-    **Культач Челябинск** - [vk.com/kultach_chelyabinsk](https://vk.com/kultach_chelyabinsk)
+- 🤖 Разработка системы коммуникаций для сообществ (боты, соц.сети, мобильные приложения)
 
 </details>
 
 ---
 
-## 💡 Philosophy
+## 💡 Мои принципы
 
-> "Great browser extensions are invisible until you need them, then they're indispensable."
+> "Технологии должны делать жизнь людей проще и объединять сообщества"
 
-**My Development Principles:**
+**Подход к разработке:**
 
-1. 🎯 **User-First Design** - Solve real problems elegantly
-2. ⚡ **Performance Matters** - Extensions should be fast and lightweight
-3. 🔐 **Privacy by Default** - Request only necessary permissions
-4. 📚 **Open Source** - Share knowledge and code with the community
-5. 🧪 **Test Everything** - Reliable extensions = happy users
+1. 🎯 **Решение реальных проблем** - Создавать то, что действительно нужно людям
+2. ⚡ **Практический опыт** - Учиться на реальных проектах
+3. 🤝 **Работа с сообществом** - Объединять людей через технологии
+4. 📚 **Постоянное обучение** - Интерес к новым технологиям и инструментам
+5. 💪 **Активная жизненная позиция** - Здоровый образ жизни и спорт
 
 ---
 
-## 🌟 Open Source Contributions
+## 🌟 Проекты и увлечения
 
 ```mermaid
 graph TB
-    A[🎁 Open Source] --> B[WXT Framework]
-    A --> C[Chrome Extensions Samples]
-    A --> D[React DevTools]
-    A --> E[Teaching Resources]
+    A[🎯 Мои проекты] --> B[🚴 Велосообщество]
+    A --> C[🤖 Боты и автоматизация]
+    A --> D[📱 Веб-приложения]
+    A --> E[🏃 Спорт и ЗОЖ]
     
     style A fill:#54bc4a
 ```
 
-**GitHub Stats:**
-- ⭐ 2.5K+ stars across repositories
-- 🔀 150+ pull requests merged
-- 📦 12 published packages
-- 🤝 Active in extension dev community
+**Активности:**
+- 🚴 Развитие велосипедного движения в Челябинске
+- 🤖 Создание ботов и систем коммуникации
+- 📱 Разработка мобильных и веб-приложений
+- 💻 Изучение современных веб-технологий
+- 🏃 Спорт: бег, велосипед, здоровый образ жизни
+- 📱 Ведение социальных сетей и SMM
 
 ---
 
-## 📫 Connect With Me
+## 📫 Связаться со мной
 
 <details>
-<summary><b>Contact Information</b></summary>
+<summary><b>Контакты и социальные сети</b></summary>
 
-- 🌐 **Website:** [alexchen.dev](https://alexchen.dev)
-- 💼 **LinkedIn:** [linkedin.com/in/alexchen](https://linkedin.com/in/alexchen)
-- 🐦 **Twitter:** [@alexchen_dev](https://twitter.com/alexchen_dev)
-- 💻 **GitHub:** [github.com/alexchen](https://github.com/alexchen)
-- 📧 **Email:** alex.chen@example.com
-- 💬 **Discord:** alexchen#1234
+**Велопроекты:**
+- 🚴 **Bike Everyday** - [vk.com/bike_everyday_chelyabinsk](https://vk.com/bike_everyday_chelyabinsk)
+- 💬 **Bike Overhear** - [vk.com/bike_overhear_chelyabinsk](https://vk.com/bike_overhear_chelyabinsk)
+- 🚵 **Bike Tours** - [vk.com/bike_tour_chelyabinsk](https://vk.com/bike_tour_chelyabinsk)
 
 </details>
 
 ---
 
-## 🎓 What to Expect Today
+## 🎓 Чего ожидать от этого материала
 
-**Workshop Structure:**
+**Структура обучения:**
 
 ```mermaid
 graph LR
-    A[📚 Learn] --> B[💻 Code]
-    B --> C[🚀 Build]
-    C --> D[🎉 Ship]
+    A[📚 Изучаю] --> B[💻 Практикуюсь]
+    B --> C[🚀 Создаю]
+    C --> D[🎉 Делюсь опытом]
     
     style A fill:#61dafb
     style B fill:#54bc4a
@@ -132,15 +149,21 @@ graph LR
     style D fill:#ff6b6b
 ```
 
-**We'll cover:**
-- ✅ Modern extension development with WXT
-- ✅ React integration and best practices
-- ✅ Real-world project: Textarea Fullscreen
-- ✅ Publishing to Chrome Web Store
-- ✅ Q&A and hands-on challenges
+**Что я освою:**
+- ✅ Современная разработка расширений с WXT
+- ✅ Интеграция React и лучшие практики
+- ✅ Реальный проект: Textarea Fullscreen
+- ✅ Публикация в Chrome Web Store
+- ✅ Применение навыков в собственных проектах
 
-**Let's build something awesome together! 🚀**
+**О себе кратко:**
+- ✅ Ответственный, коммуникабельный, стрессоустойчивый
+- ✅ Быстро обучаюсь, с чувством юмора
+- ✅ Увлечен ИТ технологиями и программированием
+- ✅ Активная жизненная позиция и здоровый образ жизни
+
+**Давайте изучать новое и создавать крутые расширения! 🚀**
 
 ---
 
-**Next:** [Slide 00: What are Chrome Extensions](./00-intro-chrome-extensions.md)
+**Далее:** [Слайд 00: Что такое расширения Chrome](./00-intro-chrome-extensions.md)

@@ -1,26 +1,26 @@
-# Slide 1: Init WXT React Starter
+# Слайд 1: Инициализация WXT React Starter
 
-**Branch:** `react/01-init-wxt-react-starter`
-
----
-
-## 🎯 What is WXT?
-
-WXT (Web Extension Tools) is a next-generation framework for building cross-browser extensions with modern tooling. It provides zero-config setup, automatic manifest generation, and lightning-fast Hot Module Reload powered by Vite.
-
-Key points (3-5 bullet points):
-- ⚡ **Vite-Powered Development** - Instant HMR and sub-second builds
-- 🎨 **React + TypeScript** - Modern development with full type safety
-- 📦 **Auto-Manifest Generation** - No manual manifest.json editing
-- 🔄 **Multi-Browser Support** - Single codebase for Chrome, Firefox, Safari
-- 🛠️ **Entrypoint Convention** - File-based routing for extension pages
+**Ветка:** `react/01-init-wxt-react-starter`
 
 ---
 
-## 📂 Files to Explore
+## 🎯 Что такое WXT?
+
+WXT (Web Extension Tools) — это фреймворк нового поколения для создания кроссбраузерных расширений с современными инструментами. Он предоставляет настройку без конфигурации, автоматическую генерацию манифеста и молниеносную горячую перезагрузку модулей на базе Vite.
+
+Ключевые моменты:
+- ⚡ **Разработка на Vite** - Мгновенная HMR и сборка за доли секунды
+- 🎨 **React + TypeScript** - Современная разработка с полной типобезопасностью
+- 📦 **Авто-генерация манифеста** - Не нужно вручную редактировать manifest.json
+- 🔄 **Поддержка мульти-браузеров** - Единая кодовая база для Chrome, Firefox, Safari
+- 🛠️ **Конвенция точек входа** - Файловая маршрутизация для страниц расширения
+
+---
+
+## 📂 Файлы для изучения
 
 <details>
-<summary><b>New/Modified Files</b></summary>
+<summary><b>Новые/Измененные файлы</b></summary>
 
 - 📄 [entrypoints/popup/App.tsx](../textarea-fullscreen-react/entrypoints/popup/App.tsx)
 - 📄 [entrypoints/popup/main.tsx](../textarea-fullscreen-react/entrypoints/popup/main.tsx)
@@ -31,7 +31,7 @@ Key points (3-5 bullet points):
 </details>
 
 <details>
-<summary><b>Configuration/Supporting Files</b></summary>
+<summary><b>Файлы конфигурации/поддержки</b></summary>
 
 - 📄 [wxt.config.ts](../textarea-fullscreen-react/wxt.config.ts)
 - 📄 [package.json](../textarea-fullscreen-react/package.json)
@@ -42,114 +42,114 @@ Key points (3-5 bullet points):
 
 ---
 
-## ✅ What's New in This Slide
+## ✅ Что нового в этом слайде
 
-- ✅ Initialized WXT project with React template
-- ✅ Configured TypeScript with strict mode
-- ✅ Set up popup entrypoint with React counter demo
-- ✅ Created background service worker
-- ✅ Added content script example
-- ✅ Enabled Hot Module Reload (HMR) for instant development
-
----
-
-**Next:** [Slide 2: Mounting React in Content Script](./02-react-content-script.md)
+- ✅ Инициализирован проект WXT с шаблоном React
+- ✅ Настроен TypeScript со строгим режимом
+- ✅ Создана точка входа popup с демо счетчиком на React
+- ✅ Создан фоновый сервис-воркер
+- ✅ Добавлен пример content script
+- ✅ Включена горячая перезагрузка модулей (HMR) для мгновенной разработки
 
 ---
 
-## 📑 Deep Dive
-
-- [How It Works](#how-it-works)
-- [Implementation Steps](#implementation-steps)
-- [Key Concepts](#key-concepts)
-- [Code Examples](#code-examples)
-- [Common Patterns](#common-patterns)
-- [Documentation](#documentation)
-- [Challenge](#challenge)
+**Далее:** [Слайд 2: Монтирование React в Content Script](./02-react-content-script.md)
 
 ---
 
-## How It Works
+## 📑 Подробное изучение
+
+- [Как это работает](#как-это-работает)
+- [Шаги реализации](#шаги-реализации)
+- [Ключевые концепции](#ключевые-концепции)
+- [Примеры кода](#примеры-кода)
+- [Распространенные паттерны](#распространенные-паттерны)
+- [Документация](#документация)
+- [Задание](#задание)
+
+---
+
+## Как это работает
 
 ```mermaid
 graph TB
     A[📁 entrypoints/] --> B[WXT Framework]
     C[📄 wxt.config.ts] --> B
     B --> D[Vite Bundler]
-    D --> E[Build Process]
+    D --> E[Процесс сборки]
     E --> F[manifest.json]
-    E --> G[Bundled JS/CSS]
+    E --> G[Собранные JS/CSS]
     E --> H[.output/chrome-mv3/]
-    H --> I[Load in Browser]
+    H --> I[Загрузка в браузер]
     
     style B fill:#54bc4a
     style H fill:#ffa500
 ```
 
-**How WXT transforms your code:**
+**Как WXT преобразует ваш код:**
 
-1. **Scans entrypoints/** - Discovers popup, background, content scripts
-2. **Bundles with Vite** - Lightning-fast builds with HMR
-3. **Generates manifest.json** - Automatically from entrypoints
-4. **Outputs build** - Browser-ready extension in `.output/`
-5. **Watches changes** - Auto-rebuilds on file save
+1. **Сканирует entrypoints/** - Обнаруживает popup, background, content scripts
+2. **Собирает с Vite** - Молниеносная сборка с HMR
+3. **Генерирует manifest.json** - Автоматически из точек входа
+4. **Выводит сборку** - Готовое для браузера расширение в `.output/`
+5. **Отслеживает изменения** - Автоматическая пересборка при сохранении файлов
 
 ---
 
-## Implementation Steps
+## Шаги реализации
 
-### 1. Create New WXT Project
+### 1. Создание нового проекта WXT
 ```bash
-# Using npm
+# Используя npm
 npm create wxt@latest
 
-# Follow prompts:
-# ✔ Project name: textarea-fullscreen
-# ✔ Choose template: react
-# ✔ Package manager: npm
+# Следуйте подсказкам:
+# ✔ Название проекта: textarea-fullscreen
+# ✔ Выберите шаблон: react
+# ✔ Менеджер пакетов: npm
 ```
 
-**What happens:**
-- Creates project structure with entrypoints
-- Installs dependencies (React, WXT, TypeScript)
-- Generates initial configuration files
-- Sets up Git repository
+**Что происходит:**
+- Создается структура проекта с точками входа
+- Устанавливаются зависимости (React, WXT, TypeScript)
+- Генерируются начальные файлы конфигурации
+- Настраивается Git репозиторий
 
 ---
 
-### 2. Explore Project Structure
+### 2. Изучение структуры проекта
 ```bash
 cd textarea-fullscreen
 tree -L 2
 ```
 
-**Generated structure:**
+**Сгенерированная структура:**
 ```
 textarea-fullscreen/
-├── entrypoints/           # Extension entry points
-│   ├── popup/            # Popup UI (React)
-│   ├── background.ts     # Background service worker
+├── entrypoints/           # Точки входа расширения
+│   ├── popup/            # UI Popup (React)
+│   ├── background.ts     # Фоновый сервис-воркер
 │   └── content.ts        # Content script
-├── public/               # Static assets
-├── .output/              # Build output (generated)
-├── wxt.config.ts         # WXT configuration
-├── package.json          # Dependencies
-└── tsconfig.json         # TypeScript config
+├── public/               # Статические ресурсы
+├── .output/              # Результат сборки (генерируется)
+├── wxt.config.ts         # Конфигурация WXT
+├── package.json          # Зависимости
+└── tsconfig.json         # Конфигурация TypeScript
 ```
 
-**Explanation:**
-- `entrypoints/` - Convention-based routing for extension pages
-- `.output/` - Build artifacts (git-ignored)
-- `wxt.config.ts` - Main configuration (similar to vite.config)
+**Объяснение:**
+- `entrypoints/` - Маршрутизация на основе конвенций для страниц расширения
+- `.output/` - Артефакты сборки (игнорируются git)
+- `wxt.config.ts` - Основная конфигурация (аналогично vite.config)
 
 ---
 
-### 3. Install Dependencies
+### 3. Установка зависимостей
 ```bash
 npm install
 ```
 
-**What gets installed:**
+**Что устанавливается:**
 ```json
 {
   "dependencies": {
@@ -167,12 +167,12 @@ npm install
 
 ---
 
-### 4. Start Development Server
+### 4. Запуск сервера разработки
 ```bash
 npm run dev
 ```
 
-**Terminal output:**
+**Вывод в терминале:**
 ```
 🌐 WXT 0.19.0
 🔨 Building chrome-mv3 for development...
@@ -187,46 +187,46 @@ entrypoints/content.ts          0.3 kB
 👀 Watching for changes...
 ```
 
-**What happens:**
-- Vite starts development server
-- Bundles all entrypoints
-- Generates manifest.json
-- Watches files for changes
-- Enables Hot Module Reload
+**Что происходит:**
+- Vite запускает сервер разработки
+- Собирает все точки входа
+- Генерирует manifest.json
+- Отслеживает изменения файлов
+- Включает горячую перезагрузку модулей
 
 ---
 
-### 5. Load Extension in Browser
+### 5. Загрузка расширения в браузер
 
 **Chrome/Edge:**
-1. Open `chrome://extensions/`
-2. Enable "Developer mode" (top-right toggle)
-3. Click "Load unpacked"
-4. Select `.output/chrome-mv3` directory
-5. Extension appears in toolbar ✅
+1. Откройте `chrome://extensions/`
+2. Включите "Режим разработчика" (переключатель справа вверху)
+3. Нажмите "Загрузить распакованное расширение"
+4. Выберите директорию `.output/chrome-mv3`
+5. Расширение появляется на панели инструментов ✅
 
 **Firefox:**
 ```bash
 npm run dev:firefox
 ```
-Firefox opens automatically with extension loaded!
+Firefox откроется автоматически с загруженным расширением!
 
 ---
 
-### 6. Test the Extension
+### 6. Тестирование расширения
 
-**Instructions:**
-1. Click extension icon in toolbar
-2. Popup opens with React counter app
-3. Click "count is 0" button → increments to 1
-4. Open DevTools (F12) → See background script log
-5. Visit Google.com → Content script runs
+**Инструкции:**
+1. Нажмите на иконку расширения на панели инструментов
+2. Откроется popup с приложением-счетчиком на React
+3. Нажмите кнопку "count is 0" → увеличится до 1
+4. Откройте DevTools (F12) → Увидите лог фонового скрипта
+5. Посетите Google.com → Запустится content script
 
 ---
 
-## Key Concepts
+## Ключевые концепции
 
-### Concept 1: Entrypoints Convention
+### Концепция 1: Конвенция точек входа
 
 ```mermaid
 graph LR
@@ -234,70 +234,70 @@ graph LR
     C[entrypoints/background.ts] --> B
     D[entrypoints/content.ts] --> B
     
-    B --> E[Browser Extension]
+    B --> E[Расширение браузера]
     
     style A fill:#61dafb
     style C fill:#ffa500
     style D fill:#54bc4a
 ```
 
-**Explanation:**
-- **File-based routing** - Each file/folder in `entrypoints/` becomes part of your extension
-- **Auto-discovery** - WXT scans directory and generates manifest automatically
-- **No manual config** - Don't edit manifest.json directly, WXT generates it
+**Объяснение:**
+- **Файловая маршрутизация** - Каждый файл/папка в `entrypoints/` становится частью вашего расширения
+- **Авто-обнаружение** - WXT сканирует директорию и генерирует манифест автоматически
+- **Без ручной настройки** - Не редактируйте manifest.json напрямую, WXT генерирует его
 
-**Mapping:**
-| Entrypoint | Becomes | Purpose |
+**Соответствие:**
+| Точка входа | Становится | Назначение |
 |------------|---------|---------|
-| `popup/` | Browser action popup | UI when clicking icon |
-| `background.ts` | Service worker | Background processing |
-| `content.ts` | Content script | Runs on web pages |
+| `popup/` | Popup браузерного действия | UI при клике на иконку |
+| `background.ts` | Сервис-воркер | Фоновая обработка |
+| `content.ts` | Content script | Запускается на веб-страницах |
 
 ---
 
-### Concept 2: Hot Module Reload (HMR)
+### Концепция 2: Горячая перезагрузка модулей (HMR)
 
-**Traditional extension development:**
+**Традиционная разработка расширений:**
 ```
-Edit code → Reload extension → Close popup → Reopen popup → Test
-(5 steps, ~10 seconds)
-```
-
-**With WXT + HMR:**
-```
-Edit code → See changes instantly
-(1 step, ~100ms)
+Редактирование кода → Перезагрузка расширения → Закрытие popup → Открытие popup → Тестирование
+(5 шагов, ~10 секунд)
 ```
 
-**How it works:**
-1. Vite detects file change
-2. Rebuilds only changed module (fast!)
-3. Sends update to browser
-4. React Fast Refresh updates UI
-5. State preserved (counter doesn't reset!)
+**С WXT + HMR:**
+```
+Редактирование кода → Мгновенное отображение изменений
+(1 шаг, ~100мс)
+```
+
+**Как это работает:**
+1. Vite обнаруживает изменение файла
+2. Пересобирает только измененный модуль (быстро!)
+3. Отправляет обновление в браузер
+4. React Fast Refresh обновляет UI
+5. Состояние сохраняется (счетчик не сбрасывается!)
 
 ---
 
-### Concept 3: TypeScript First
+### Концепция 3: TypeScript в первую очередь
 
-**Key points:**
-- Full type safety out of the box
-- IntelliSense for browser APIs
-- Catch errors before runtime
-- Better developer experience
+**Ключевые моменты:**
+- Полная типобезопасность из коробки
+- IntelliSense для API браузера
+- Отлов ошибок до выполнения
+- Лучший опыт разработчика
 
-**Example:**
+**Пример:**
 ```typescript
-// TypeScript knows what browser.tabs is!
+// TypeScript знает, что такое browser.tabs!
 browser.tabs.query({ active: true })
 //      ^? browser.tabs: Tabs
 ```
 
 ---
 
-## Code Examples
+## Примеры кода
 
-### Example 1: Popup Component (React)
+### Пример 1: Компонент Popup (React)
 
 ```typescript
 // entrypoints/popup/App.tsx
@@ -322,7 +322,7 @@ function App() {
       <h1>WXT + React</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+          счетчик {count}
         </button>
       </div>
     </>
@@ -332,52 +332,52 @@ function App() {
 export default App;
 ```
 
-**What this does:**
-- Standard React component with hooks
-- Uses Vite's asset imports (`@/assets/`, `/public`)
-- CSS modules supported
-- Hot reload works out of the box
+**Что это делает:**
+- Стандартный React компонент с хуками
+- Использует импорт ресурсов Vite (`@/assets/`, `/public`)
+- Поддержка CSS модулей
+- Горячая перезагрузка работает из коробки
 
 ---
 
-### Example 2: Background Script
+### Пример 2: Фоновый скрипт
 
 ```typescript
 // entrypoints/background.ts
 export default defineBackground(() => {
-  console.log('Hello background!', { id: browser.runtime.id });
+  console.log('Привет, фоновый скрипт!', { id: browser.runtime.id });
 });
 ```
 
-**What this does:**
-- `defineBackground()` - WXT helper for background scripts
-- Runs when extension loads
-- Access to all browser APIs
-- Logs extension ID to console
+**Что это делает:**
+- `defineBackground()` - Хелпер WXT для фоновых скриптов
+- Запускается при загрузке расширения
+- Доступ ко всем API браузера
+- Логирует ID расширения в консоль
 
 ---
 
-### Example 3: Content Script
+### Пример 3: Content Script
 
 ```typescript
 // entrypoints/content.ts
 export default defineContentScript({
   matches: ['*://*.google.com/*'],
   main() {
-    console.log('Hello content script!', { id: browser.runtime.id });
+    console.log('Привет, content script!', { id: browser.runtime.id });
   },
 });
 ```
 
-**What this does:**
-- `defineContentScript()` - WXT helper with config
-- `matches` - Run only on Google.com
-- `main()` - Entry point function
-- Injected into matching pages
+**Что это делает:**
+- `defineContentScript()` - Хелпер WXT с конфигурацией
+- `matches` - Запуск только на Google.com
+- `main()` - Функция точки входа
+- Внедряется на соответствующие страницы
 
 ---
 
-### Example 4: WXT Configuration
+### Пример 4: Конфигурация WXT
 
 ```typescript
 // wxt.config.ts
@@ -387,43 +387,43 @@ export default defineConfig({
   modules: ['@wxt-dev/module-react'],
   manifest: {
     name: 'Textarea Fullscreen',
-    description: 'Make any textarea fullscreen',
+    description: 'Сделать любое textarea полноэкранным',
     permissions: ['storage'],
   }
 });
 ```
 
-**What this does:**
-- Enables React module (JSX transform, Fast Refresh)
-- Configures manifest metadata
-- Sets permissions
-- WXT merges with auto-generated manifest
+**Что это делает:**
+- Включает модуль React (JSX трансформация, Fast Refresh)
+- Настраивает метаданные манифеста
+- Устанавливает разрешения
+- WXT объединяет с авто-сгенерированным манифестом
 
 ---
 
-## Common Patterns
+## Распространенные паттерны
 
 <details>
-<summary><b>Pattern 1: Multiple Entrypoints</b></summary>
+<summary><b>Паттерн 1: Множественные точки входа</b></summary>
 
 ```
 entrypoints/
-├── popup/          # Main popup
-├── options/        # Settings page
-├── background.ts   # Service worker
+├── popup/          # Основной popup
+├── options/        # Страница настроек
+├── background.ts   # Сервис-воркер
 ├── content.ts      # Content script
-└── content.css     # Content script styles
+└── content.css     # Стили content script
 ```
 
-**When to use:**
-- Options page for complex settings
-- Multiple content scripts for different sites
-- Separate CSS for content scripts
+**Когда использовать:**
+- Страница настроек для сложных настроек
+- Несколько content scripts для разных сайтов
+- Отдельный CSS для content scripts
 
 </details>
 
 <details>
-<summary><b>Pattern 2: Shared Components</b></summary>
+<summary><b>Паттерн 2: Общие компоненты</b></summary>
 
 ```typescript
 // components/Button.tsx
@@ -435,84 +435,84 @@ export function Button({ children, onClick }) {
 import { Button } from '@/components/Button';
 
 function App() {
-  return <Button onClick={() => alert('Hi!')}>Click me</Button>;
+  return <Button onClick={() => alert('Привет!')}>Нажми меня</Button>;
 }
 ```
 
-**When to use:**
-- Reusable UI components
-- Shared utilities
-- Common hooks
+**Когда использовать:**
+- Переиспользуемые UI компоненты
+- Общие утилиты
+- Общие хуки
 
 </details>
 
 <details>
-<summary><b>Pattern 3: Asset Imports</b></summary>
+<summary><b>Паттерн 3: Импорт ресурсов</b></summary>
 
 ```typescript
-// Import from public/ folder
+// Импорт из папки public/
 import logo from '/logo.png';
 
-// Import from src/assets/
+// Импорт из src/assets/
 import icon from '@/assets/icon.svg';
 
-// Use in JSX
-<img src={logo} alt="Logo" />
+// Использование в JSX
+<img src={logo} alt="Логотип" />
 ```
 
-**When to use:**
-- Images, fonts, SVGs
-- Static assets
-- Icons
+**Когда использовать:**
+- Изображения, шрифты, SVG
+- Статические ресурсы
+- Иконки
 
 </details>
 
 ---
 
-## Documentation
+## Документация
 
 <details>
-<summary><b>Related Resources</b></summary>
+<summary><b>Связанные ресурсы</b></summary>
 
-- 📚 [WXT Documentation](https://wxt.dev)
-- 📚 [WXT Getting Started](https://wxt.dev/guide/)
-- 🎓 [Chrome Extensions Guide](https://developer.chrome.com/docs/extensions)
-- 💡 [React Documentation](https://react.dev)
-- 🔧 [Vite Documentation](https://vitejs.dev)
+- 📚 [Документация WXT](https://wxt.dev)
+- 📚 [Начало работы с WXT](https://wxt.dev/guide/)
+- 🎓 [Руководство по расширениям Chrome](https://developer.chrome.com/docs/extensions)
+- 💡 [Документация React](https://react.dev)
+- 🔧 [Документация Vite](https://vitejs.dev)
 
 </details>
 
 ---
 
-## Challenge
+## Задание
 
-**Try this yourself:**
+**Попробуйте сами:**
 
-1. **Customize the popup:**
-   - Change button text to "🚀 Clicks: {count}"
-   - Add a reset button
-   - See HMR update instantly
+1. **Настройте popup:**
+   - Измените текст кнопки на "🚀 Кликов: {count}"
+   - Добавьте кнопку сброса
+   - Увидите мгновенное обновление через HMR
 
-2. **Add a new entrypoint:**
-   - Create `entrypoints/options/index.html`
-   - Create `entrypoints/options/App.tsx`
-   - Build and open options page
+2. **Добавьте новую точку входа:**
+   - Создайте `entrypoints/options/index.html`
+   - Создайте `entrypoints/options/App.tsx`
+   - Соберите и откройте страницу настроек
 
-3. **Modify content script:**
-   - Change matches to `['<all_urls>']`
-   - Log the current page URL
-   - Test on different websites
+3. **Измените content script:**
+   - Измените matches на `['<all_urls>']`
+   - Логируйте URL текущей страницы
+   - Протестируйте на разных веб-сайтах
 
-**Expected result:**
-- Popup updates without reload
-- New options page appears in extensions
-- Content script runs on all sites
+**Ожидаемый результат:**
+- Popup обновляется без перезагрузки
+- Новая страница настроек появляется в расширениях
+- Content script запускается на всех сайтах
 
-**Bonus:**
-- Add CSS styling to popup
-- Create a shared component
-- Use browser.storage API to persist count
+**Бонус:**
+- Добавьте CSS стилизацию в popup
+- Создайте общий компонент
+- Используйте browser.storage API для сохранения счетчика
 
 ---
 
-**Next:** [Slide 2: Mounting React in Content Script](./02-react-content-script.md)
+**Далее:** [Слайд 2: Монтирование React в Content Script](./02-react-content-script.md)

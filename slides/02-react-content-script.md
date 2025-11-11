@@ -1,25 +1,25 @@
-# Slide 2: Mounting React in Content Script
+# Слайд 2: Монтирование React в Content Script
 
-**Branch:** `react/02-react-content-script`
-
----
-
-## 🎯 What is a React Content Script?
-
-A content script that uses React to inject UI components directly into web pages. Instead of vanilla JavaScript DOM manipulation, we leverage React's component model for better organization and state management.
-
-Key points:
-- ⚡ **React in Content Scripts** - Use React components on any webpage
-- 🎨 **Component-Based** - Organize UI as reusable components  
-- 📦 **createRoot API** - Modern React 18+ mounting method
-- 🔄 **TSX Support** - Full TypeScript + JSX support in WXT
+**Ветка:** `react/02-react-content-script`
 
 ---
 
-## 📂 Files to Explore
+## 🎯 Что такое React Content Script?
+
+Content script, который использует React для внедрения UI компонентов непосредственно в веб-страницы. Вместо манипуляции DOM на чистом JavaScript, мы используем компонентную модель React для лучшей организации и управления состоянием.
+
+Ключевые моменты:
+- ⚡ **React в Content Scripts** - Используйте React компоненты на любой веб-странице
+- 🎨 **Компонентный подход** - Организуйте UI как переиспользуемые компоненты  
+- 📦 **API createRoot** - Современный метод монтирования React 18+
+- 🔄 **Поддержка TSX** - Полная поддержка TypeScript + JSX в WXT
+
+---
+
+## 📂 Файлы для изучения
 
 <details>
-<summary><b>New/Modified Files</b></summary>
+<summary><b>Новые/Измененные файлы</b></summary>
 
 - 📁 [entrypoints/content/index.tsx](../textarea-fullscreen-react/entrypoints/content/index.tsx)
 - 📁 [entrypoints/content/ContentApp.tsx](../textarea-fullscreen-react/entrypoints/content/ContentApp.tsx)
@@ -27,7 +27,7 @@ Key points:
 </details>
 
 <details>
-<summary><b>Configuration Files</b></summary>
+<summary><b>Файлы конфигурации</b></summary>
 
 - 📄 [wxt.config.ts](../textarea-fullscreen-react/wxt.config.ts)
 - 📄 [package.json](../textarea-fullscreen-react/package.json)
@@ -36,84 +36,84 @@ Key points:
 
 ---
 
-## ✅ What's New in This Slide
+## ✅ Что нового в этом слайде
 
-- ✅ Converted `content.ts` from single file to directory structure
-- ✅ Created React entrypoint with `createRoot`
-- ✅ Added `ContentApp.tsx` component
-- ✅ Injected React UI into every webpage
-- ✅ Used high z-index for visibility above page content
-
----
-
-**Next:** [Slide 3: Auto-Imports and Hooks](./03-auto-imports-and-hooks.md)  
+- ✅ Преобразован `content.ts` из одного файла в структуру каталогов
+- ✅ Создана точка входа React с `createRoot`
+- ✅ Добавлен компонент `ContentApp.tsx`
+- ✅ React UI внедрен на каждую веб-страницу
+- ✅ Использован высокий z-index для видимости поверх содержимого страницы
 
 ---
 
-## 📑 Deep Dive
-
-- [How It Works](#how-it-works)
-- [Implementation Steps](#implementation-steps)
-- [Key Concepts](#key-concepts)
-- [Code Examples](#code-examples)
-- [Common Patterns](#common-patterns)
-- [Documentation](#documentation)
-- [Challenge](#challenge)
+**Далее:** [Слайд 3: Авто-импорты и хуки](./03-auto-imports-and-hooks.md)  
 
 ---
 
-## How It Works
+## 📑 Подробное изучение
+
+- [Как это работает](#как-это-работает)
+- [Шаги реализации](#шаги-реализации)
+- [Ключевые концепции](#ключевые-концепции)
+- [Примеры кода](#примеры-кода)
+- [Распространенные паттерны](#распространенные-паттерны)
+- [Документация](#документация)
+- [Задание](#задание)
+
+---
+
+## Как это работает
 
 ```mermaid
 graph TB
-    A[Web Page Loads] --> B[WXT Injects content.js]
-    B --> C[defineContentScript main runs]
-    C --> D[Create div container]
-    D --> E[Append to document.body]
-    E --> F[createRoot on container]
-    F --> G[Render React ContentApp]
-    G --> H[React UI visible on page]
+    A[Загружается веб-страница] --> B[WXT внедряет content.js]
+    B --> C[Запускается defineContentScript main]
+    C --> D[Создается div контейнер]
+    D --> E[Добавляется в document.body]
+    E --> F[createRoot на контейнере]
+    F --> G[Рендерится React ContentApp]
+    G --> H[React UI виден на странице]
     
     style C fill:#54bc4a
     style G fill:#61dafb
     style H fill:#ffa500
 ```
 
-**Flow Explanation:**
-1. User visits any webpage
-2. Browser injects your content script
-3. Script creates a container div
-4. React mounts into that container
-5. Your React components render on the page
+**Объяснение потока:**
+1. Пользователь посещает любую веб-страницу
+2. Браузер внедряет ваш content script
+3. Скрипт создает контейнер div
+4. React монтируется в этот контейнер
+5. Ваши React компоненты рендерятся на странице
 
 ---
 
-## Implementation Steps
+## Шаги реализации
 
-### 1. Convert to Directory Structure
+### 1. Преобразование в структуру каталогов
 
-**Old structure:**
+**Старая структура:**
 ```
 📂 entrypoints/
    📄 content.ts
 ```
 
-**New structure:**
+**Новая структура:**
 ```
 📂 entrypoints/
    📂 content/
-      📄 index.tsx       # Entrypoint (must be named index)
-      📄 ContentApp.tsx  # React component
+      📄 index.tsx       # Точка входа (должна называться index)
+      📄 ContentApp.tsx  # React компонент
 ```
 
-**Why?**
-- Keeps related files together
-- Allows adding more components/styles later
-- WXT looks for `index.tsx` as the entrypoint
+**Почему?**
+- Держит связанные файлы вместе
+- Позволяет добавлять больше компонентов/стилей позже
+- WXT ищет `index.tsx` как точку входа
 
 ---
 
-### 2. Create Content Script Entrypoint
+### 2. Создание точки входа Content Script
 
 ```typescript
 // entrypoints/content/index.tsx
@@ -124,27 +124,27 @@ export default defineContentScript({
   matches: ['<all_urls>'],
   
   main() {
-    // Create container for React app
+    // Создаем контейнер для React приложения
     const container = document.createElement('div');
     container.id = 'textarea-fullscreen-root';
     document.body.appendChild(container);
     
-    // Mount React
+    // Монтируем React
     const root = createRoot(container);
     root.render(<ContentApp />);
   },
 });
 ```
 
-**What happens:**
-- `matches: ['<all_urls>']` - Run on every webpage
-- `main()` - Runs when script loads
-- Creates a div and appends to page
-- Mounts React app into that div
+**Что происходит:**
+- `matches: ['<all_urls>']` - Запуск на каждой веб-странице
+- `main()` - Выполняется при загрузке скрипта
+- Создает div и добавляет на страницу
+- Монтирует React приложение в этот div
 
 ---
 
-### 3. Create React Component
+### 3. Создание React компонента
 
 ```tsx
 // entrypoints/content/ContentApp.tsx
@@ -163,61 +163,61 @@ export default function ContentApp() {
       fontSize: '14px',
       boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
     }}>
-      ✅ Extension Active
+      ✅ Расширение активно
     </div>
   );
 }
 ```
 
-**Styling notes:**
-- `position: fixed` - Stays visible when scrolling
-- `zIndex: 999999` - Appears above most page content
-- `top/right: 10` - Positioned in top-right corner
+**Примечания по стилям:**
+- `position: fixed` - Остается видимым при прокрутке
+- `zIndex: 999999` - Отображается поверх большинства содержимого страницы
+- `top/right: 10` - Позиционирован в правом верхнем углу
 
 ---
 
-### 4. Test on Any Website
+### 4. Тестирование на любом веб-сайте
 
-**Steps:**
-1. Run `npm run dev`
-2. Load extension in browser
-3. Visit **any website** (e.g., google.com, github.com)
-4. See "✅ Extension Active" badge in top-right corner
+**Шаги:**
+1. Запустите `npm run dev`
+2. Загрузите расширение в браузер
+3. Посетите **любой веб-сайт** (например, google.com, github.com)
+4. Увидите бейдж "✅ Расширение активно" в правом верхнем углу
 
 ---
 
-## Key Concepts
+## Ключевые концепции
 
-### Concept 1: Content Script vs Popup
+### Концепция 1: Content Script vs Popup
 
 ```mermaid
 graph LR
     subgraph Popup
-        P[User clicks icon] --> PR[popup.html opens]
-        PR --> PUI[Isolated UI]
+        P[Клик по иконке] --> PR[Открывается popup.html]
+        PR --> PUI[Изолированный UI]
     end
     
     subgraph Content Script
-        CS[Page loads] --> CI[Script injected]
-        CI --> CUI[UI injected into page DOM]
+        CS[Загрузка страницы] --> CI[Внедрение скрипта]
+        CI --> CUI[UI внедрен в DOM страницы]
     end
     
     style PUI fill:#61dafb
     style CUI fill:#54bc4a
 ```
 
-**Key Differences:**
-- **Popup:** Opens when user clicks extension icon, separate window
-- **Content Script:** Runs automatically on web pages, shares DOM with page
-- **Use Case:** Content scripts modify/enhance existing pages
+**Ключевые различия:**
+- **Popup:** Открывается при клике на иконку расширения, отдельное окно
+- **Content Script:** Запускается автоматически на веб-страницах, разделяет DOM со страницей
+- **Случай использования:** Content scripts модифицируют/улучшают существующие страницы
 
 ---
 
-### Concept 2: Why `main()` Function?
+### Концепция 2: Зачем функция `main()`?
 
-**❌ WRONG - Code runs during build:**
+**❌ НЕПРАВИЛЬНО - Код выполняется во время сборки:**
 ```typescript
-const container = document.createElement('div'); // Error! No 'document' during build
+const container = document.createElement('div'); // Ошибка! Нет 'document' во время сборки
 
 export default defineContentScript({
   matches: ['<all_urls>'],
@@ -227,43 +227,43 @@ export default defineContentScript({
 });
 ```
 
-**✅ CORRECT - Code runs in browser:**
+**✅ ПРАВИЛЬНО - Код выполняется в браузере:**
 ```typescript
 export default defineContentScript({
   matches: ['<all_urls>'],
   main() {
-    const container = document.createElement('div'); // ✓ Runs in browser
+    const container = document.createElement('div'); // ✓ Выполняется в браузере
     document.body.appendChild(container);
   }
 });
 ```
 
-**Explanation:**
-- WXT imports content scripts during **build time** (Node.js environment)
-- `document`, `window` don't exist in Node.js
-- `main()` function runs in **browser** where DOM exists
+**Объяснение:**
+- WXT импортирует content scripts во время **сборки** (среда Node.js)
+- `document`, `window` не существуют в Node.js
+- Функция `main()` выполняется в **браузере**, где существует DOM
 
 ---
 
-### Concept 3: React createRoot (React 18+)
+### Концепция 3: React createRoot (React 18+)
 
 ```mermaid
 graph LR
-    A[Old: ReactDOM.render] -->|Deprecated| B[New: createRoot]
-    B --> C[Concurrent Features]
-    C --> D[Better Performance]
+    A[Старый: ReactDOM.render] -->|Устарел| B[Новый: createRoot]
+    B --> C[Конкурентные функции]
+    C --> D[Лучшая производительность]
     
     style B fill:#61dafb
     style D fill:#54bc4a
 ```
 
-**Old way (React 17):**
+**Старый способ (React 17):**
 ```typescript
 import ReactDOM from 'react-dom';
 ReactDOM.render(<App />, container);
 ```
 
-**New way (React 18+):**
+**Новый способ (React 18+):**
 ```typescript
 import { createRoot } from 'react-dom/client';
 const root = createRoot(container);
@@ -272,9 +272,9 @@ root.render(<App />);
 
 ---
 
-## Code Examples
+## Примеры кода
 
-### Example 1: Simple Badge Component
+### Пример 1: Простой компонент бейджа
 
 ```tsx
 // entrypoints/content/ContentApp.tsx
@@ -288,20 +288,20 @@ export default function ContentApp() {
       padding: '10px',
       zIndex: 999999 
     }}>
-      Extension Active ✓
+      Расширение активно ✓
     </div>
   );
 }
 ```
 
-**What this does:**
-- Creates a fixed position badge
-- Shows "Extension Active ✓" message
-- Appears on every webpage matching pattern
+**Что это делает:**
+- Создает бейдж с фиксированной позицией
+- Показывает сообщение "Расширение активно ✓"
+- Появляется на каждой веб-странице, соответствующей паттерну
 
 ---
 
-### Example 2: With State
+### Пример 2: С состоянием
 
 ```tsx
 // entrypoints/content/ContentApp.tsx
@@ -319,23 +319,23 @@ export default function ContentApp() {
       padding: '10px',
       zIndex: 999999 
     }}>
-      <p>Page visits: {count}</p>
+      <p>Посещений страницы: {count}</p>
       <button onClick={() => setCount(c => c + 1)}>
-        Increment
+        Увеличить
       </button>
     </div>
   );
 }
 ```
 
-**What this does:**
-- Adds React state with `useState`
-- Button increments counter
-- Demonstrates React hooks work in content scripts
+**Что это делает:**
+- Добавляет состояние React с `useState`
+- Кнопка увеличивает счетчик
+- Демонстрирует, что React хуки работают в content scripts
 
 ---
 
-### Example 3: Multiple Components
+### Пример 3: Несколько компонентов
 
 ```tsx
 // entrypoints/content/ContentApp.tsx
@@ -361,7 +361,7 @@ export default function ContentApp() {
       right: 10, 
       zIndex: 999999 
     }}>
-      <Badge>✅ Extension Active</Badge>
+      <Badge>✅ Расширение активно</Badge>
     </div>
   );
 }
@@ -369,10 +369,10 @@ export default function ContentApp() {
 
 ---
 
-## Common Patterns
+## Распространенные паттерны
 
 <details>
-<summary><b>Pattern 1: Conditional Rendering</b></summary>
+<summary><b>Паттерн 1: Условный рендеринг</b></summary>
 
 ```tsx
 export default function ContentApp() {
@@ -382,107 +382,107 @@ export default function ContentApp() {
 
   return (
     <div style={{ position: 'fixed', top: 10, right: 10, zIndex: 999999 }}>
-      Extension Active
-      <button onClick={() => setVisible(false)}>Hide</button>
+      Расширение активно
+      <button onClick={() => setVisible(false)}>Скрыть</button>
     </div>
   );
 }
 ```
 
-**When to use:**
-- Show/hide UI based on conditions
-- Toggle visibility
-- Conditional features
+**Когда использовать:**
+- Показ/скрытие UI на основе условий
+- Переключение видимости
+- Условные функции
 
 </details>
 
 <details>
-<summary><b>Pattern 2: Cleanup on Unmount</b></summary>
+<summary><b>Паттерн 2: Очистка при размонтировании</b></summary>
 
 ```tsx
 export default function ContentApp() {
   useEffect(() => {
-    console.log('Component mounted');
+    console.log('Компонент смонтирован');
     
     return () => {
-      console.log('Component unmounted');
-      // Cleanup code here
+      console.log('Компонент размонтирован');
+      // Код очистки здесь
     };
   }, []);
 
-  return <div>Content</div>;
+  return <div>Содержимое</div>;
 }
 ```
 
-**When to use:**
-- Remove event listeners
-- Clear intervals/timeouts
-- Clean up resources
+**Когда использовать:**
+- Удаление обработчиков событий
+- Очистка интервалов/таймаутов
+- Очистка ресурсов
 
 </details>
 
 <details>
-<summary><b>Pattern 3: High z-index Styling</b></summary>
+<summary><b>Паттерн 3: Стилизация с высоким z-index</b></summary>
 
 ```tsx
 const OVERLAY_STYLES = {
   position: 'fixed',
-  zIndex: 2147483647, // Maximum z-index value
+  zIndex: 2147483647, // Максимальное значение z-index
   top: 0,
   right: 0,
-  // ... other styles
+  // ... другие стили
 };
 
 export default function ContentApp() {
-  return <div style={OVERLAY_STYLES}>Always on top</div>;
+  return <div style={OVERLAY_STYLES}>Всегда сверху</div>;
 }
 ```
 
-**When to use:**
-- Ensure visibility above all page content
-- Modal overlays
-- Fixed position UI
+**Когда использовать:**
+- Обеспечение видимости поверх всего содержимого страницы
+- Модальные оверлеи
+- UI с фиксированной позицией
 
 </details>
 
 ---
 
-## Documentation
+## Документация
 
 <details>
-<summary><b>Related Resources</b></summary>
+<summary><b>Связанные ресурсы</b></summary>
 
 - 📚 [WXT Content Scripts](https://wxt.dev/guide/essentials/content-scripts.html)
 - 📚 [React createRoot API](https://react.dev/reference/react-dom/client/createRoot)
 - 🎓 [Chrome Content Scripts](https://developer.chrome.com/docs/extensions/mv3/content_scripts/)
-- 💡 [React in Extensions Best Practices](https://wxt.dev/guide/frameworks/react.html)
+- 💡 [Лучшие практики React в расширениях](https://wxt.dev/guide/frameworks/react.html)
 
 </details>
 
 ---
 
-## Challenge
+## Задание
 
-**Try this yourself:**
+**Попробуйте сами:**
 
-1. Add a counter that tracks how many textareas are on the page
-2. Display the count in your badge component
-3. Update the count when new textareas are added dynamically
+1. Добавьте счетчик, который отслеживает, сколько textarea на странице
+2. Отобразите количество в вашем компоненте бейджа
+3. Обновляйте счетчик при динамическом добавлении новых textarea
 
-**Expected result:**
-- Badge shows: "Textareas found: 3"
-- Count updates automatically
+**Ожидаемый результат:**
+- Бейдж показывает: "Найдено textarea: 3"
+- Счетчик обновляется автоматически
 
-**Bonus:**
-- Add a button to highlight all textareas on the page
-- Use different colors for different textarea states
+**Бонус:**
+- Добавьте кнопку для подсветки всех textarea на странице
+- Используйте разные цвета для разных состояний textarea
 
-**Hint:**
+**Подсказка:**
 ```tsx
 const textareas = document.querySelectorAll('textarea');
-console.log('Found:', textareas.length);
+console.log('Найдено:', textareas.length);
 ```
 
 ---
 
-**Next:** [Slide 3: Auto-Imports and Hooks](./03-auto-imports-and-hooks.md)
+**Далее:** [Слайд 3: Авто-импорты и хуки](./03-auto-imports-and-hooks.md)

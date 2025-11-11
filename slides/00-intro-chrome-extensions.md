@@ -1,85 +1,85 @@
-# Slide 00: What are Chrome Extensions?
+# Слайд 00: Что такое расширения Chrome?
 
 ---
 
-## 🎯 What is a Chrome Extension?
+## 🎯 Что такое расширение Chrome?
 
-A Chrome extension is a small software program that customizes and enhances your browsing experience. Built with web technologies (HTML, CSS, JavaScript), extensions add new features to your browser or modify existing webpage behavior.
+Расширение Chrome — это небольшая программа, которая настраивает и улучшает ваш опыт просмотра веб-страниц. Созданные с использованием веб-технологий (HTML, CSS, JavaScript), расширения добавляют новые функции в ваш браузер или изменяют существующее поведение веб-страниц.
 
-Key points:
-- 🌐 **Web Technologies** - Built with HTML, CSS, JavaScript/TypeScript
-- 🔧 **Browser Enhancement** - Add features or modify webpage behavior
-- 📦 **Packaged App** - Distributed through Chrome Web Store
-- 🔐 **Sandboxed & Secure** - Run in isolated environments with permissions
-- 🎨 **Highly Customizable** - From simple tools to complex applications
+Ключевые моменты:
+- 🌐 **Веб-технологии** - Созданы с помощью HTML, CSS, JavaScript/TypeScript
+- 🔧 **Улучшение браузера** - Добавляют функции или изменяют поведение веб-страниц
+- 📦 **Упакованное приложение** - Распространяется через Chrome Web Store
+- 🔐 **Изолированы и безопасны** - Работают в изолированных средах с разрешениями
+- 🎨 **Высоко настраиваемы** - От простых инструментов до сложных приложений
 
 ---
 
-## 📂 Extension Components
+## 📂 Компоненты расширения
 
 <details>
-<summary><b>Core Components</b></summary>
+<summary><b>Основные компоненты</b></summary>
 
-- 📄 **Manifest.json** - Configuration and metadata
-- 📄 **Background Scripts** - Run in background, handle events
-- 📄 **Content Scripts** - Inject into webpages, modify DOM
-- 📄 **Popup UI** - Small window when clicking extension icon
-- 📄 **Options Page** - Settings and configuration page
+- 📄 **Manifest.json** - Конфигурация и метаданные
+- 📄 **Фоновые скрипты** - Работают в фоне, обрабатывают события
+- 📄 **Content Scripts** - Внедряются в веб-страницы, изменяют DOM
+- 📄 **Popup UI** - Небольшое окно при клике на иконку расширения
+- 📄 **Страница настроек** - Страница настроек и конфигурации
 
 </details>
 
 ---
 
-## ✅ What You'll Learn Today
+## ✅ Что вы сегодня изучите
 
-- ✅ Modern Chrome extension development with WXT framework
-- ✅ Building UI with React and TypeScript
-- ✅ Injecting React components into webpages
-- ✅ Managing state and storage
-- ✅ Building and packaging for distribution
-- ✅ Real-world example: Textarea Fullscreen extension
-
----
-
-**Next:** [Slide 1: Init WXT React Starter](./01-init-wxt-react-starter.md)
+- ✅ Современная разработка расширений Chrome с фреймворком WXT
+- ✅ Создание UI с React и TypeScript
+- ✅ Внедрение React компонентов в веб-страницы
+- ✅ Управление состоянием и хранилищем
+- ✅ Сборка и упаковка для распространения
+- ✅ Реальный пример: расширение Textarea Fullscreen
 
 ---
 
-## 📑 Deep Dive
-
-- [How It Works](#how-it-works)
-- [Architecture Overview](#architecture-overview)
-- [Key Concepts](#key-concepts)
-- [Extension Types](#extension-types)
-- [Use Cases](#use-cases)
-- [Documentation](#documentation)
+**Далее:** [Слайд 1: Инициализация WXT React Starter](./01-init-wxt-react-starter.md)
 
 ---
 
-## How It Works
+## 📑 Подробное изучение
+
+- [Как это работает](#как-это-работает)
+- [Обзор архитектуры](#обзор-архитектуры)
+- [Ключевые концепции](#ключевые-концепции)
+- [Типы расширений](#типы-расширений)
+- [Примеры использования](#примеры-использования)
+- [Документация](#документация)
+
+---
+
+## Как это работает
 
 ```mermaid
 graph TB
-    subgraph "User Installs Extension"
-        A[Chrome Web Store] --> B[Download .crx file]
-        B --> C[Install in Browser]
+    subgraph "Пользователь устанавливает расширение"
+        A[Chrome Web Store] --> B[Скачивание .crx файла]
+        B --> C[Установка в браузер]
     end
     
-    subgraph "Extension Runtime"
+    subgraph "Среда выполнения расширения"
         C --> D[Manifest.json]
-        D --> E[Background Script]
+        D --> E[Фоновый скрипт]
         D --> F[Content Scripts]
         D --> G[Popup UI]
         
-        H[User Visits Webpage] --> F
-        I[User Clicks Icon] --> G
-        J[Browser Events] --> E
+        H[Пользователь посещает веб-страницу] --> F
+        I[Пользователь кликает на иконку] --> G
+        J[События браузера] --> E
     end
     
-    subgraph "Extension Capabilities"
+    subgraph "Возможности расширения"
         E --> K[Storage API]
-        F --> L[DOM Manipulation]
-        G --> M[User Settings]
+        F --> L[Манипуляция DOM]
+        G --> M[Настройки пользователя]
     end
     
     style D fill:#54bc4a
@@ -88,26 +88,26 @@ graph TB
     style G fill:#ff6b6b
 ```
 
-**Flow Explanation:**
-1. User installs extension from Chrome Web Store
-2. Browser loads manifest.json to understand extension structure
-3. Background script runs persistently (or as service worker in MV3)
-4. Content scripts inject into matching webpages
-5. Popup opens when user clicks extension icon
-6. All components communicate via Chrome APIs
+**Объяснение потока:**
+1. Пользователь устанавливает расширение из Chrome Web Store
+2. Браузер загружает manifest.json для понимания структуры расширения
+3. Фоновый скрипт работает постоянно (или как service worker в MV3)
+4. Content scripts внедряются в соответствующие веб-страницы
+5. Popup открывается, когда пользователь кликает на иконку расширения
+6. Все компоненты взаимодействуют через Chrome API
 
 ---
 
-## Architecture Overview
+## Обзор архитектуры
 
-### Extension Manifest (manifest.json)
+### Манифест расширения (manifest.json)
 
 ```json
 {
   "manifest_version": 3,
-  "name": "My Extension",
+  "name": "Мое расширение",
   "version": "1.0.0",
-  "description": "Does something cool",
+  "description": "Делает что-то крутое",
   
   "permissions": ["storage", "tabs"],
   
@@ -127,32 +127,32 @@ graph TB
 }
 ```
 
-**Key Fields:**
-- `manifest_version` - MV2 (deprecated) or MV3 (current)
-- `permissions` - What browser APIs extension can use
-- `background` - Background script configuration
-- `content_scripts` - Scripts injected into webpages
-- `action` - Popup and icon configuration
+**Ключевые поля:**
+- `manifest_version` - MV2 (устарел) или MV3 (текущий)
+- `permissions` - Какие API браузера может использовать расширение
+- `background` - Конфигурация фонового скрипта
+- `content_scripts` - Скрипты, внедряемые в веб-страницы
+- `action` - Конфигурация popup и иконки
 
 ---
 
-### Component Breakdown
+### Разбор компонентов
 
 ```mermaid
 graph LR
-    subgraph "Browser Extension"
-        A[Manifest.json<br/>Configuration] --> B[Background<br/>Service Worker]
-        A --> C[Content Scripts<br/>Webpage Injection]
-        A --> D[Popup UI<br/>User Interface]
-        A --> E[Options Page<br/>Settings]
+    subgraph "Расширение браузера"
+        A[Manifest.json<br/>Конфигурация] --> B[Background<br/>Service Worker]
+        A --> C[Content Scripts<br/>Внедрение в страницу]
+        A --> D[Popup UI<br/>Интерфейс]
+        A --> E[Options Page<br/>Настройки]
     end
     
-    subgraph "Webpage Context"
+    subgraph "Контекст веб-страницы"
         F[DOM] <--> C
-        G[Page Scripts] <--> C
+        G[Скрипты страницы] <--> C
     end
     
-    subgraph "Browser APIs"
+    subgraph "API браузера"
         B <--> H[Storage]
         B <--> I[Tabs]
         B <--> J[Messaging]
@@ -168,27 +168,27 @@ graph LR
 
 ---
 
-## Key Concepts
+## Ключевые концепции
 
-### Concept 1: Execution Contexts
+### Концепция 1: Контексты выполнения
 
-Chrome extensions run in **three separate contexts**:
+Расширения Chrome работают в **трех отдельных контекстах**:
 
 ```mermaid
 graph TB
-    subgraph "Extension Contexts"
-        A[Background Context<br/>Isolated, persistent]
-        B[Content Script Context<br/>Shared DOM, isolated JS]
-        C[Popup Context<br/>Isolated, temporary]
+    subgraph "Контексты расширения"
+        A[Контекст Background<br/>Изолированный, постоянный]
+        B[Контекст Content Script<br/>Общий DOM, изолированный JS]
+        C[Контекст Popup<br/>Изолированный, временный]
     end
     
-    subgraph "Webpage"
-        D[Page Context<br/>Website's own scripts]
+    subgraph "Веб-страница"
+        D[Контекст страницы<br/>Собственные скрипты сайта]
     end
     
     B <--> D
-    A <-.Message Passing.-> B
-    A <-.Message Passing.-> C
+    A <-.Передача сообщений.-> B
+    A <-.Передача сообщений.-> C
     
     style A fill:#ffa500
     style B fill:#61dafb
@@ -196,161 +196,161 @@ graph TB
     style D fill:#cccccc
 ```
 
-**Important:**
-- **Background** - No DOM access, full Chrome API access
-- **Content Script** - DOM access, limited Chrome API access
-- **Popup** - Own HTML page, full Chrome API access
-- **Page Context** - Website's code, no Chrome API access
+**Важно:**
+- **Background** - Нет доступа к DOM, полный доступ к Chrome API
+- **Content Script** - Доступ к DOM, ограниченный доступ к Chrome API
+- **Popup** - Собственная HTML страница, полный доступ к Chrome API
+- **Контекст страницы** - Код веб-сайта, нет доступа к Chrome API
 
 ---
 
-### Concept 2: Permissions System
+### Концепция 2: Система разрешений
 
-Extensions must declare permissions in manifest:
+Расширения должны объявлять разрешения в манифесте:
 
 ```json
 {
   "permissions": [
     "storage",        // chrome.storage API
     "tabs",          // chrome.tabs API
-    "activeTab"      // Access current tab when user clicks
+    "activeTab"      // Доступ к текущей вкладке при клике пользователя
   ],
   
   "host_permissions": [
-    "https://*.example.com/*"  // Access to specific domains
+    "https://*.example.com/*"  // Доступ к определенным доменам
   ]
 }
 ```
 
-**Permission Types:**
-- **API Permissions** - Access to Chrome APIs
-- **Host Permissions** - Access to webpage content
-- **Optional Permissions** - Request at runtime when needed
+**Типы разрешений:**
+- **Разрешения API** - Доступ к Chrome API
+- **Разрешения хостов** - Доступ к содержимому веб-страницы
+- **Опциональные разрешения** - Запрос во время выполнения при необходимости
 
-**User sees permissions during installation!**
+**Пользователь видит разрешения во время установки!**
 
 ---
 
-### Concept 3: Manifest V2 vs V3
+### Концепция 3: Manifest V2 vs V3
 
-| Feature | Manifest V2 (Old) | Manifest V3 (Current) |
+| Функция | Manifest V2 (Старый) | Manifest V3 (Текущий) |
 |---------|------------------|---------------------|
-| **Background** | Persistent page | Service worker |
-| **Status** | Deprecated 2024 | Required for new extensions |
-| **Host Permissions** | `permissions` array | `host_permissions` array |
-| **Remote Code** | Allowed | Blocked (security) |
-| **webRequest** | Blocking allowed | Declarative only |
+| **Background** | Постоянная страница | Service worker |
+| **Статус** | Устарел в 2024 | Требуется для новых расширений |
+| **Разрешения хостов** | Массив `permissions` | Массив `host_permissions` |
+| **Удаленный код** | Разрешен | Заблокирован (безопасность) |
+| **webRequest** | Разрешена блокировка | Только декларативный |
 
-**WXT handles both!** We'll use MV3 in this presentation.
+**WXT обрабатывает оба!** В этой презентации мы будем использовать MV3.
 
 ---
 
-## Extension Types
+## Типы расширений
 
-### Type 1: Page Modifiers
-**Modify existing webpages**
+### Тип 1: Модификаторы страниц
+**Изменяют существующие веб-страницы**
 
 ```
-Examples:
-- Ad blockers (uBlock Origin)
-- Dark mode (Dark Reader)
-- Grammar checkers (Grammarly)
-- Our project: Textarea Fullscreen
+Примеры:
+- Блокировщики рекламы (uBlock Origin)
+- Темный режим (Dark Reader)
+- Проверка грамматики (Grammarly)
+- Наш проект: Textarea Fullscreen
 ```
 
-**Key Features:**
+**Ключевые функции:**
 - Content scripts
-- DOM manipulation
-- CSS injection
+- Манипуляция DOM
+- Внедрение CSS
 
 ---
 
-### Type 2: Browser Tools
-**Add new browser functionality**
+### Тип 2: Инструменты браузера
+**Добавляют новую функциональность браузера**
 
 ```
-Examples:
-- Password managers (1Password)
-- Screenshot tools (Awesome Screenshot)
-- Tab managers (OneTab)
-- Bookmark organizers
+Примеры:
+- Менеджеры паролей (1Password)
+- Инструменты для скриншотов (Awesome Screenshot)
+- Менеджеры вкладок (OneTab)
+- Организаторы закладок
 ```
 
-**Key Features:**
-- Background scripts
-- Browser API usage
-- Popup interfaces
+**Ключевые функции:**
+- Фоновые скрипты
+- Использование Browser API
+- Интерфейсы popup
 
 ---
 
-### Type 3: Dev Tools
-**Enhance developer experience**
+### Тип 3: Dev Tools
+**Улучшают опыт разработчика**
 
 ```
-Examples:
+Примеры:
 - React DevTools
 - Vue DevTools
-- JSON formatters
-- API testers
+- JSON форматеры
+- API тестеры
 ```
 
-**Key Features:**
-- DevTools pages
-- Network inspection
-- Code analysis
+**Ключевые функции:**
+- Страницы DevTools
+- Инспекция сети
+- Анализ кода
 
 ---
 
-### Type 4: Productivity Tools
-**Improve workflow**
+### Тип 4: Инструменты продуктивности
+**Улучшают рабочий процесс**
 
 ```
-Examples:
-- Note takers (Notion Web Clipper)
-- Time trackers (Toggl)
-- Task managers (Todoist)
-- Email helpers
+Примеры:
+- Блокноты (Notion Web Clipper)
+- Трекеры времени (Toggl)
+- Менеджеры задач (Todoist)
+- Помощники для email
 ```
 
-**Key Features:**
-- Storage APIs
-- Cloud sync
-- Rich UI
+**Ключевые функции:**
+- Storage API
+- Облачная синхронизация
+- Богатый UI
 
 ---
 
-## Use Cases
+## Примеры использования
 
 <details>
-<summary><b>Use Case 1: Content Enhancement</b></summary>
+<summary><b>Пример использования 1: Улучшение контента</b></summary>
 
-**Problem:** Want to add features to existing websites without browser extension.
+**Проблема:** Хотите добавить функции на существующие веб-сайты без расширения браузера.
 
-**Solution:** Content script that injects UI components.
+**Решение:** Content script, который внедряет UI компоненты.
 
-**Example:**
+**Пример:**
 ```javascript
-// Content script adds a "Save to Reading List" button to articles
+// Content script добавляет кнопку "Сохранить в список чтения" к статьям
 const button = document.createElement('button');
-button.textContent = 'Save for Later';
+button.textContent = 'Сохранить на потом';
 button.onclick = () => chrome.storage.local.set({ article: document.body.innerText });
 document.querySelector('article').prepend(button);
 ```
 
-**Our Project:** Adding fullscreen button to textareas!
+**Наш проект:** Добавление кнопки полноэкранного режима к textarea!
 
 </details>
 
 <details>
-<summary><b>Use Case 2: Cross-Site Features</b></summary>
+<summary><b>Пример использования 2: Межсайтовые функции</b></summary>
 
-**Problem:** Need functionality that works across multiple websites.
+**Проблема:** Нужна функциональность, которая работает на нескольких веб-сайтах.
 
-**Solution:** Extension with background script + content scripts.
+**Решение:** Расширение с фоновым скриптом + content scripts.
 
-**Example:**
+**Пример:**
 ```javascript
-// Background script tracks time spent on websites
+// Фоновый скрипт отслеживает время, проведенное на веб-сайтах
 chrome.tabs.onActivated.addListener(({ tabId }) => {
   chrome.tabs.get(tabId, (tab) => {
     logTimeSpent(tab.url);
@@ -358,20 +358,20 @@ chrome.tabs.onActivated.addListener(({ tabId }) => {
 });
 ```
 
-**Real Extensions:** RescueTime, WakaTime
+**Реальные расширения:** RescueTime, WakaTime
 
 </details>
 
 <details>
-<summary><b>Use Case 3: Browser Automation</b></summary>
+<summary><b>Пример использования 3: Автоматизация браузера</b></summary>
 
-**Problem:** Repetitive browser tasks.
+**Проблема:** Повторяющиеся задачи в браузере.
 
-**Solution:** Extension that automates actions.
+**Решение:** Расширение, которое автоматизирует действия.
 
-**Example:**
+**Пример:**
 ```javascript
-// Auto-fill forms with saved data
+// Автозаполнение форм сохраненными данными
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'autofill') {
     document.querySelector('#name').value = request.data.name;
@@ -380,30 +380,30 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 ```
 
-**Real Extensions:** Form fillers, Auto-refresh tools
+**Реальные расширения:** Заполнители форм, Инструменты автообновления
 
 </details>
 
 ---
 
-## Documentation
+## Документация
 
 <details>
-<summary><b>Official Resources</b></summary>
+<summary><b>Официальные ресурсы</b></summary>
 
-- 📚 [Chrome Extension Documentation](https://developer.chrome.com/docs/extensions/)
-- 📚 [Chrome Extensions Samples](https://github.com/GoogleChrome/chrome-extensions-samples)
-- 📚 [Extension API Reference](https://developer.chrome.com/docs/extensions/reference/)
-- 🎓 [Getting Started Tutorial](https://developer.chrome.com/docs/extensions/mv3/getstarted/)
+- 📚 [Документация расширений Chrome](https://developer.chrome.com/docs/extensions/)
+- 📚 [Примеры расширений Chrome](https://github.com/GoogleChrome/chrome-extensions-samples)
+- 📚 [Справочник API расширений](https://developer.chrome.com/docs/extensions/reference/)
+- 🎓 [Учебник для начинающих](https://developer.chrome.com/docs/extensions/mv3/getstarted/)
 - 💡 [Chrome Web Store](https://chrome.google.com/webstore/category/extensions)
 
 </details>
 
 <details>
-<summary><b>Development Tools</b></summary>
+<summary><b>Инструменты разработки</b></summary>
 
-- 🔧 [WXT Framework](https://wxt.dev) - What we'll use today!
-- 🔧 [Plasmo](https://www.plasmo.com/) - Alternative framework
+- 🔧 [Фреймворк WXT](https://wxt.dev) - Что мы будем использовать сегодня!
+- 🔧 [Plasmo](https://www.plasmo.com/) - Альтернативный фреймворк
 - 🔧 [Extension CLI](https://github.com/chibat/chrome-extension-cli)
 - 🔧 [WebExtension Polyfill](https://github.com/mozilla/webextension-polyfill)
 
