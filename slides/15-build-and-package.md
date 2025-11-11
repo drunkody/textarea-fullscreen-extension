@@ -52,8 +52,8 @@ Key points:
 
 ---
 
-**Next:** [Slide 16: Deployment & Distribution](./16-deployment.md)  
-**Branch:** `react/15-build-and-package`
+**Next:** [Slide 16: Deployment & Distribution](./16-contribute.md)  
+
 
 ---
 
@@ -836,5 +836,5 @@ jobs:
 
 ---
 
-**Next:** [Congratulations! 🎉](./16-conclusion.md)  
+**Next:** [Congratulations! 🎉](./16-contribute.md)  
 **Branch:** `git checkout main`

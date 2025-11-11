@@ -53,7 +53,7 @@ Key points (3-5 bullet points):
 
 ---
 
-**Next:** [Slide 2: Understanding Entrypoints](./02-react-content-script.md)
+**Next:** [Slide 2: Mounting React in Content Script](./02-react-content-script.md)
 
 ---
 
@@ -515,4 +515,4 @@ import icon from '@/assets/icon.svg';
 
 ---
 
-**Next:** [Slide 2: Understanding Entrypoints](./02-react-content-script.md)
+**Next:** [Slide 2: Mounting React in Content Script](./02-react-content-script.md)
