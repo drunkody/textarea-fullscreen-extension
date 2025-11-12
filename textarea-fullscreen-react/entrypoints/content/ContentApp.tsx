@@ -8,6 +8,7 @@ import { useZIndexFix } from '../../hooks/useZIndexFix';
 import { StatusBadge } from '../../components/StatusBadge';
 import { TextareaButtons } from '../../components/TextareaButtons';
 import { FullscreenEditor } from '../../components/FullscreenEditor';
+import { Overlay } from '../../components/Overlay';
 import { logger } from '../../utils/logger';
 
 export default function ContentApp() {
@@ -79,6 +80,11 @@ export default function ContentApp() {
         expandedIndex={expandedIndex}
         onButtonClick={handleButtonClick}
       />
+
+      {/* Background Overlay */}
+      {expandedIndex !== null && (
+        <Overlay onClose={handleEditorClose} visible={true} />
+      )}
 
       {/* Fullscreen Editor Modal */}
       {expandedIndex !== null && textareas[expandedIndex] && (
