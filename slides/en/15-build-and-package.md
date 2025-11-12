@@ -128,7 +128,7 @@ export default defineConfig({
     
     // Author & Homepage
     author: 'Your Name',
-    homepage_url: 'https://github.com/yourusername/textarea-fullscreen',
+    homepage_url: 'https://github.com/drunkody/textarea-fullscreen',
     
     // Icons (required for stores)
     icons: {

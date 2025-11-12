@@ -1,0 +1,109 @@
+name: Release Extension
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    name: Build & Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'textarea-fullscreen-react/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: textarea-fullscreen-react
+        run: npm ci
+
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Update version in files
+        working-directory: textarea-fullscreen-react
+        run: |
+          # Update package.json
+          npm version ${{ steps.version.outputs.VERSION }} --no-git-tag-version
+          # Update manifest in wxt.config.ts
+          sed -i "s/version: '[^']*'/version: '${{ steps.version.outputs.VERSION }}'/" wxt.config.ts
+
+      - name: Build Chrome extension
+        working-directory: textarea-fullscreen-react
+        run: |
+          npm run build
+          npm run zip
+
+      - name: Build Firefox extension
+        working-directory: textarea-fullscreen-react
+        run: |
+          npm run build:firefox
+          npm run zip:firefox
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          if [ -f textarea-fullscreen-react/CHANGELOG.md ]; then
+            # Extract current version changes
+            sed -n "/## \\[${{ steps.version.outputs.VERSION }}\\]/,/## \\[/" textarea-fullscreen-react/CHANGELOG.md | sed '$d' > current-changes.md
+          else
+            echo "Release version ${{ steps.version.outputs.VERSION }}" > current-changes.md
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            textarea-fullscreen-react/.output/*.zip
+          body_path: current-changes.md
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload to Chrome Web Store (Optional)
+        if: false # Enable manually when ready
+        working-directory: textarea-fullscreen-react
+        env:
+          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+        run: |
+          # Install chrome-webstore-upload-cli
+          npm install -g chrome-webstore-upload-cli
+          # Upload to Chrome Web Store
+          chrome-webstore-upload upload \
+            --source .output/textarea-fullscreen-chrome-${{ steps.version.outputs.VERSION }}.zip \
+            --extension-id $CHROME_EXTENSION_ID \
+            --client-id $CHROME_CLIENT_ID \
+            --client-secret $CHROME_CLIENT_SECRET \
+            --refresh-token $CHROME_REFRESH_TOKEN
+
+      - name: Upload to Firefox Add-ons (Optional)
+        if: false # Enable manually when ready
+        working-directory: textarea-fullscreen-react
+        env:
+          FIREFOX_JWT_ISSUER: ${{ secrets.FIREFOX_JWT_ISSUER }}
+          FIREFOX_JWT_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
+          FIREFOX_EXTENSION_ID: ${{ secrets.FIREFOX_EXTENSION_ID }}
+        run: |
+          # Install web-ext
+          npm install -g web-ext
+          # Sign and upload to Firefox Add-ons
+          web-ext sign \
+            --source-dir .output/firefox-mv2 \
+            --api-key $FIREFOX_JWT_ISSUER \
+            --api-secret $FIREFOX_JWT_SECRET \
+            --channel listed
