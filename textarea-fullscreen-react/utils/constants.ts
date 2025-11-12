@@ -32,3 +32,11 @@ export const BUTTON_SIZE = {
   normal: 30,    // обычное состояние
   expanded: 32   // в полноэкранном режиме
 } as const;
+
+// Keyboard shortcuts configuration
+export const KEYBOARD_SHORTCUTS = {
+  toggleFullscreen: '8', // Ctrl+8 to toggle fullscreen
+  closeEditor: 'Escape', // Escape to close editor
+  save: 's', // Ctrl+S to save (future)
+  help: '?', // Show shortcuts help (future)
+} as const;

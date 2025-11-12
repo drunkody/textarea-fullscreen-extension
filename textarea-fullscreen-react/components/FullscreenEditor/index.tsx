@@ -1,6 +1,8 @@
 import { createPortal } from 'react-dom';
 import { useEffect, useRef } from 'react';
 import { FullscreenButton } from '../FullscreenButton';
+import { useKeyboardShortcut } from '../../hooks/useKeyboardShortcut';
+import { KEYBOARD_SHORTCUTS } from '../../utils/constants';
 import { logger } from '../../utils/logger';
 import './style.css';
 
@@ -16,6 +18,10 @@ export function FullscreenEditor({
   onClose
 }: FullscreenEditorProps) {
   const cloneRef = useRef<HTMLTextAreaElement>(null);
+
+  // ===== Keyboard Shortcuts =====
+  // Escape to close editor (only when expanded)
+  useKeyboardShortcut(KEYBOARD_SHORTCUTS.closeEditor, onClose, { enabled: isExpanded });
 
   // ===== Content Synchronization =====
   useEffect(() => {
@@ -51,29 +57,6 @@ export function FullscreenEditor({
       };
     }
   }, [isExpanded, textarea]);
-
-  // ===== Keyboard Shortcuts =====
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Close on Escape
-      if (e.key === 'Escape' && isExpanded) {
-        logger.info('[FullscreenEditor] Escape pressed - closing');
-        onClose();
-      }
-    };
-
-    if (isExpanded) {
-      logger.debug('[FullscreenEditor] Keyboard listener attached');
-      document.addEventListener('keydown', handleKeyDown);
-    }
-
-    return () => {
-      if (isExpanded) {
-        logger.debug('[FullscreenEditor] Keyboard listener removed');
-        document.removeEventListener('keydown', handleKeyDown);
-      }
-    };
-  }, [isExpanded, onClose]);
 
   // Don't render if not expanded
   if (!isExpanded) {

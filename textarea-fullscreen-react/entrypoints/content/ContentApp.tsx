@@ -3,12 +3,14 @@
  * Orchestrates textarea detection and fullscreen functionality
  */
 import { useState, useCallback, useEffect } from 'react';
+import { useKeyboardShortcut } from '../../hooks/useKeyboardShortcut';
 
 import { useZIndexFix } from '../../hooks/useZIndexFix';
 import { StatusBadge } from '../../components/StatusBadge';
 import { TextareaButtons } from '../../components/TextareaButtons';
 import { FullscreenEditor } from '../../components/FullscreenEditor';
 import { Overlay } from '../../components/Overlay';
+import { KEYBOARD_SHORTCUTS } from '../../utils/constants';
 import { logger } from '../../utils/logger';
 
 export default function ContentApp() {
@@ -60,6 +62,42 @@ export default function ContentApp() {
       logger.groupEnd();
     },
     [expandedIndex]
+  );
+
+  // ===== Keyboard Shortcut: Ctrl+F to toggle fullscreen =====
+  useKeyboardShortcut(
+    KEYBOARD_SHORTCUTS.toggleFullscreen,
+    () => {
+      logger.group('⌨️ [ContentApp] Ctrl+F pressed');
+
+      // Find currently focused textarea
+      const activeElement = document.activeElement;
+
+      if (activeElement instanceof HTMLTextAreaElement) {
+        // Find index of focused textarea
+        const index = textareas.indexOf(activeElement);
+
+        if (index !== -1) {
+          logger.info('Toggling fullscreen for focused textarea', { index });
+
+          // Toggle: close if already expanded, open if not
+          setExpandedIndex(expandedIndex === index ? null : index);
+        } else {
+          logger.warn('Focused textarea not in our list');
+        }
+      } else {
+        logger.debug('No textarea focused, ignoring shortcut');
+
+        // Optional: expand first textarea if none focused
+        if (textareas.length > 0 && expandedIndex === null) {
+          logger.info('Expanding first textarea');
+          setExpandedIndex(0);
+        }
+      }
+
+      logger.groupEnd();
+    },
+    { ctrl: true }
   );
 
   // Handle editor close
