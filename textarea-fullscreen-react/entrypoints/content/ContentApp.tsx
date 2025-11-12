@@ -1,33 +1,60 @@
-// ВОТ ЧТО WXT СДЕЛАЕТ ЗА КУЛИСАМИ:
+/**
+ * Главный компонент content script
+ * Отображает бейдж с количеством найденных textarea
+ */
+
 // import { useTextareaDetector } from '../../hooks/useTextareaDetector';
 // import { Badge } from '../../components/Badge';
-// ═══════════════════════════════════════════════════════════
-// import { Badge } from '../../components/Badge';
+
 export default function ContentApp() {
+  // Используем хук для поиска textarea
+  // textareas - массив найденных элементов
+  const { textareas } = useTextareaDetector();
 
-  // Badge()
-  
-  const { textareas, count } = useTextareaDetector();
-
-  
-  // Как это работает:
-  // 1. useTextareaDetector() выполняется
-  // 2. Внутри хука useEffect ищет все textarea
-  // 3. Возвращает { textareas: [...], count: 5 }
-  // 4. Мы деструктурируем результат
-
-  console.log('[ContentApp] Рендеринг с', count, 'textarea элементами');
   return (
     <div
       style={{
-        position: 'fixed',  // Фиксированная позиция (не скроллится)
-        top: 10,            // 10px от верха экрана
-        right: 10,          // 10px справа
-        zIndex: 999999,     // Поверх всех элементов страницы
+        // Фиксированная позиция (не скроллится)
+        position: 'fixed',
+        
+        // Позиция: правый верхний угол
+        top: '10px',
+        right: '10px',
+        
+        // Высокий z-index (всегда сверху)
+        zIndex: 999999,
+        
+        // Белый фон
+        background: 'white',
+        
+        // Внутренние отступы
+        padding: '10px',
+        
+        // Скруглённые углы
+        borderRadius: '4px',
+        
+        // Тень для глубины
+        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+        
+        // Системный шрифт
+        fontFamily: 'system-ui, -apple-system, sans-serif'
       }}
     >
-      <Badge color="#0066cc">
-        Найдено {count} textarea{count !== 1 ? '' : ''}
+      {/* Бейдж с динамическим цветом */}
+      <Badge 
+        color={
+          // Если найдены textarea - зелёный, иначе - серый
+          textareas.length > 0 ? '#4caf50' : '#9e9e9e'
+        }
+      >
+        {/* Иконка галочки */}
+        ✅
+        
+        {/* Количество textarea */}
+        {' '}{textareas.length} валидных textarea
+        
+        {/* Добавляем 's' для множественного числа */}
+        {textareas.length !== 1 ? 's' : ''}
       </Badge>
     </div>
   );
