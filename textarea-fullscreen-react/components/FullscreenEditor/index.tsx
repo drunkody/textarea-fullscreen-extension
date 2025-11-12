@@ -1,8 +1,7 @@
 import { createPortal } from 'react-dom';
 import { useEffect, useRef } from 'react';
 import { FullscreenButton } from '../FullscreenButton';
-import { useKeyboardShortcut } from '../../hooks/useKeyboardShortcut';
-import { KEYBOARD_SHORTCUTS } from '../../utils/constants';
+import { useKeyboardShortcut } from '../../hooks/useKeyboardShortcut'; // ✅ ADDED
 import { logger } from '../../utils/logger';
 import './style.css';
 
@@ -21,7 +20,7 @@ export function FullscreenEditor({
 
   // ===== Keyboard Shortcuts =====
   // Escape to close editor (only when expanded)
-  useKeyboardShortcut(KEYBOARD_SHORTCUTS.closeEditor, onClose, { enabled: isExpanded });
+  useKeyboardShortcut('Escape', onClose, { enabled: isExpanded }); // ✅ FIXED
 
   // ===== Content Synchronization =====
   useEffect(() => {

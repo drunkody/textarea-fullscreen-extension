@@ -4,16 +4,51 @@
  */
 import { useState, useCallback, useEffect } from 'react';
 import { useKeyboardShortcut } from '../../hooks/useKeyboardShortcut';
-
+import { useSettings } from '../../hooks/useSettings';
+import { useTextareaDetector } from '../../hooks/useTextareaDetector';
 import { useZIndexFix } from '../../hooks/useZIndexFix';
+import { useButtonContainers } from '../../hooks/useButtonContainers';
 import { StatusBadge } from '../../components/StatusBadge';
 import { TextareaButtons } from '../../components/TextareaButtons';
 import { FullscreenEditor } from '../../components/FullscreenEditor';
 import { Overlay } from '../../components/Overlay';
-import { KEYBOARD_SHORTCUTS } from '../../utils/constants';
 import { logger } from '../../utils/logger';
 
 export default function ContentApp() {
+  // Load settings
+  const { settings, loading } = useSettings();
+  const [initialized, setInitialized] = useState(false);
+
+  // Wait for settings to load and check if enabled
+  useEffect(() => {
+    if (loading) return;
+
+    if (!settings.enabled) {
+      logger.warn('[ContentApp] Extension disabled in settings');
+      return;
+    }
+
+    // Check excluded domains
+    const currentDomain = window.location.hostname;
+    const excludedDomains = settings.excludedDomains
+      .split('\n')
+      .map(d => d.trim())
+      .filter(Boolean);
+
+    if (excludedDomains.some(domain => currentDomain.includes(domain))) {
+      logger.warn('[ContentApp] Current domain is excluded', currentDomain);
+      return;
+    }
+
+    // Small delay for page stability
+    const timer = setTimeout(() => {
+      logger.success('[ContentApp] Initializing...');
+      setInitialized(true);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [loading, settings.enabled, settings.excludedDomains]);
+
   // Detect textareas on the page
   const { textareas } = useTextareaDetector();
 
@@ -64,11 +99,11 @@ export default function ContentApp() {
     [expandedIndex]
   );
 
-  // ===== Keyboard Shortcut: Ctrl+F to toggle fullscreen =====
+  // ===== Keyboard Shortcut: Use DYNAMIC shortcut key from settings =====
   useKeyboardShortcut(
-    KEYBOARD_SHORTCUTS.toggleFullscreen,
+    settings.shortcutKey, // ✅ CHANGED: Use dynamic key instead of hardcoded
     () => {
-      logger.group('⌨️ [ContentApp] Ctrl+F pressed');
+      logger.group(`⌨️ [ContentApp] Ctrl+${settings.shortcutKey.toUpperCase()} pressed`);
 
       // Find currently focused textarea
       const activeElement = document.activeElement;
@@ -106,6 +141,11 @@ export default function ContentApp() {
     setExpandedIndex(null);
   }, []);
 
+  // Don't render if not initialized
+  if (loading || !initialized) {
+    return null;
+  }
+
   return (
     <>
       {/* Status Badge */}
@@ -120,7 +160,7 @@ export default function ContentApp() {
       />
 
       {/* Background Overlay */}
-      {expandedIndex !== null && (
+      {expandedIndex !== null && settings.overlay && (
         <Overlay onClose={handleEditorClose} visible={true} />
       )}
 

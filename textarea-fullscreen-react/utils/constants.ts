@@ -20,25 +20,31 @@ export const DATA_ATTRIBUTES = {
   wrapper: 'data-tx-wrapper'       // помечает обёртку вокруг textarea
 } as const;
 
-// Z-index для элементов UI (чтобы всегда были сверху)
+// Z-index for UI elements
 export const Z_INDEX = {
-  button: 99999999,        // кнопка на textarea
-  overlay: 2147483646,   // затемнённый фон
-  editor: 2147483647     // полноэкранный редактор (максимальный z-index)
+  button: 99999999, // кнопка на textarea
+  editor: 2147483647 // полноэкранный редактор (максимальный z-index)
 } as const;
 
-// Размеры кнопки в разных состояниях
+// Button sizes
 export const BUTTON_SIZE = {
-  normal: 30,    // обычное состояние
-  expanded: 32   // в полноэкранном режиме
+  normal: 30, // обычное состояние
+  icon: 18, // размер иконки внутри кнопки
+  hover: 36, // при наведении
+  active: 28 // при нажатии
 } as const;
 
-// Keyboard shortcuts configuration
+// Горячие клавиши
 export const KEYBOARD_SHORTCUTS = {
-  toggleFullscreen: '8', // Ctrl+8 to toggle fullscreen
-  closeEditor: 'Escape', // Escape to close editor
-  save: 's', // Ctrl+S to save (future)
-  help: '?', // Show shortcuts help (future)
+  closeEditor: 'Escape', // ✅ Add this
+  defaultToggle: 'f', // Default shortcut key
+} as const;
+
+// Debounce delays (milliseconds)
+export const DEBOUNCE_DELAYS = {
+  mutation: 150, // MutationObserver callback delay
+  scroll: 300, // Scroll event delay
+  resize: 200, // Resize event delay (future)
 } as const;
 
 // Storage keys
