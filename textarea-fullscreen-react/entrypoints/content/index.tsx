@@ -1,45 +1,38 @@
 import ReactDOM from 'react-dom/client';
 import ContentApp from './ContentApp.tsx';
 
-// ┌─────────────────────────────────────────────────┐
-// │ ШАГ 2: Экспортируем WXT content script          │
-// └─────────────────────────────────────────────────┘
+
 export default defineContentScript({
-  // ШАГ 3: На каких страницах запускать
-  matches: ['<all_urls>'],  // Все сайты (можно ограничить)
+  matches: ['<all_urls>'],
   
-  // ШАГ 4: Главная функция
   main(ctx) {
-    console.log('Content script загружен!');
+    logger.success('Content script loaded!', {
+      url: window.location.href,
+      mode: import.meta.env.MODE
+    });
     
-    // ┌────────────────────────────────────────────┐
-    // │ ШАГ 5: Создаём UI интеграцию с WXT         │
-    // └────────────────────────────────────────────┘
     const ui = createIntegratedUi(ctx, {
-      position: 'inline',  // Встроить в DOM страницы
+      position: 'inline',
       anchor: 'body',
-      // ШАГ 6: Что делать при монтировании
+      
       onMount: (container) => {
-        // container = <div> который WXT создал для нас
+        logger.info('Mounting React app...');
         
-        // Создаём React корень
         const root = ReactDOM.createRoot(container);
-        
-        // Рендерим наше приложение
         root.render(<ContentApp />);
         
-        // Возвращаем root для последующего удаления
+        logger.success('React app mounted!');
+        
         return root;
       },
       
-      // ШАГ 7: Что делать при размонтировании
       onRemove: (root) => {
-        // Очищаем React корень
+        logger.info('Unmounting React app...');
         root?.unmount();
+        logger.success('React app unmounted!');
       },
     });
     
-    // ШАГ 8: Монтируем UI на страницу
     ui.mount();
   },
 });

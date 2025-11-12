@@ -22,7 +22,13 @@ export const DATA_ATTRIBUTES = {
 
 // Z-index для элементов UI (чтобы всегда были сверху)
 export const Z_INDEX = {
-  BUTTON: 999999,        // кнопка на textarea
-  OVERLAY: 2147483646,   // затемнённый фон
-  EDITOR: 2147483647     // полноэкранный редактор (максимальный z-index)
+  button: 99999999,        // кнопка на textarea
+  overlay: 2147483646,   // затемнённый фон
+  editor: 2147483647     // полноэкранный редактор (максимальный z-index)
+} as const;
+
+// Размеры кнопки в разных состояниях
+export const BUTTON_SIZE = {
+  normal: 30,    // обычное состояние
+  expanded: 32   // в полноэкранном режиме
 } as const;
