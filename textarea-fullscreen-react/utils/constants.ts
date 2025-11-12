@@ -40,3 +40,9 @@ export const KEYBOARD_SHORTCUTS = {
   save: 's', // Ctrl+S to save (future)
   help: '?', // Show shortcuts help (future)
 } as const;
+
+// Storage keys
+export const STORAGE_KEYS = {
+  settings: 'settings',
+  lastSync: 'lastSync',
+} as const;

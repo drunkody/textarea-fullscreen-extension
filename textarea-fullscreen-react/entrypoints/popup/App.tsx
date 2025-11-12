@@ -1,35 +1,76 @@
+// entrypoints/popup/App.tsx
 import { useState } from 'react';
-import reactLogo from '@/assets/react.svg';
-import wxtLogo from '/wxt.svg';
+import { SettingsForm } from '../../components/SettingsForm';
+import { useSettings } from '../../hooks/useSettings';
+import type { Settings } from '../../types/settings';
 import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0);
+export default function App() {
+  const { settings, loading, saveSettings } = useSettings();
+  const [statusMessage, setStatusMessage] = useState('');
+  const [statusType, setStatusType] = useState<'success' | 'error'>('success');
+
+  const handleSave = async (newSettings: Settings) => {
+    try {
+      await saveSettings(newSettings);
+      setStatusType('success');
+      setStatusMessage('✓ Settings saved successfully!');
+
+      // Clear message after 2 seconds
+      setTimeout(() => setStatusMessage(''), 2000);
+    } catch (error) {
+      setStatusType('error');
+      setStatusMessage('✗ Failed to save settings');
+
+      setTimeout(() => setStatusMessage(''), 3000);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="popup-container">
+        <div className="loading">
+          <div className="spinner"></div>
+          <p>Loading settings...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://wxt.dev" target="_blank">
-          <img src={wxtLogo} className="logo" alt="WXT logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="popup-container">
+      {/* Header */}
+      <div className="popup-header">
+        <h3 className="popup-title">
+          <span className="popup-icon">⛶</span>
+          Textarea Fullscreen
+        </h3>
+        <p className="popup-subtitle">Configure your fullscreen experience</p>
       </div>
-      <h1>WXT + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
+
+      {/* Status Message */}
+      {statusMessage && (
+        <div className={`status-message status-${statusType}`}>
+          {statusMessage}
+        </div>
+      )}
+
+      {/* Settings Form */}
+      <SettingsForm settings={settings} onSave={handleSave} />
+
+      {/* Info Box */}
+      <div className="info-box">
+        <strong>💡 Quick Tip:</strong>
         <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
+          Press <kbd>Ctrl</kbd>+<kbd>{settings.shortcutKey.toUpperCase()}</kbd> on any
+          textarea to toggle fullscreen mode.
         </p>
       </div>
-      <p className="read-the-docs">
-        Click on the WXT and React logos to learn more
-      </p>
-    </>
+
+      {/* Footer */}
+      <div className="popup-footer">
+        <small>Version 1.0.0 • Made with ❤️</small>
+      </div>
+    </div>
   );
 }
-
-export default App;
