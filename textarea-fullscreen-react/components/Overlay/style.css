@@ -1,0 +1,33 @@
+/* ===== BACKGROUND OVERLAY ===== */
+.tx-overlay {
+  /* Positioning - full viewport */
+  position: fixed;
+  inset: 0;
+
+  /* Size - explicit for older browsers */
+  width: 100vw;
+  height: 100vh;
+
+  /* Appearance - semi-transparent dark */
+  background: rgba(0, 0, 0, 0.5);
+
+  /* Blur effect - modern browsers */
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px); /* Safari */
+
+  /* Z-index - below editor (2147483647), above everything else */
+  z-index: 2147483646;
+
+  /* Animation - smooth fade effect */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+
+  /* Interaction */
+  cursor: pointer;
+
+  /* Reset potential conflicts */
+  margin: 0;
+  padding: 0;
+  border: none;
+  box-sizing: border-box;
+}

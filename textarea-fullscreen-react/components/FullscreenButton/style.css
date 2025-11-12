@@ -1,0 +1,70 @@
+/* ===== FULLSCREEN BUTTON STYLES ===== */
+.tx-fullscreen-btn {
+  /* Позиционирование */
+  position: absolute !important;
+  top: 5px !important;
+  right: 5px !important;
+  
+  /* Размеры */
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+  
+  /* Оформление */
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid rgba(204, 204, 204, 0.8) !important;
+  border-radius: 4px !important;
+  
+  /* Текст */
+  font-size: 16px !important;
+  line-height: 1 !important;
+  color: #333 !important;
+  
+  /* Layout */
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  
+  /* Взаимодействие */
+  cursor: pointer !important;
+  user-select: none !important;
+  
+  /* ===== КРИТИЧНО: pointer-events и z-index ===== */
+  pointer-events: auto !important;
+  z-index: 9999999 !important;
+  
+  /* Видимость */
+  opacity: 0.85 !important;
+  
+  /* Анимация */
+  transition: all 0.2s ease !important;
+  
+  /* Эффекты */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  outline: none !important;
+  
+  /* ===== НОВОЕ: Принудительное позиционирование ===== */
+  isolation: isolate !important;
+}
+
+/* Hover State */
+.tx-fullscreen-btn:hover {
+  opacity: 1 !important;
+  transform: scale(1.05) !important;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25) !important;
+  z-index: 9999999 !important; /* Убедиться, что z-index остаётся высоким */
+}
+
+/* Active State */
+.tx-fullscreen-btn:active {
+  transform: scale(0.95) !important;
+}
+
+/* Focus State */
+.tx-fullscreen-btn:focus-visible {
+  outline: 2px solid #0066cc !important;
+  outline-offset: 2px !important;
+}
